@@ -33,7 +33,7 @@ public enum OAuthAttributes {
 
         UserProfile userProfile = new UserProfile();
         userProfile.setUserName(profile.get("nickname"));
-        //userProfile.setEmail((String)account.get("email"));
+        userProfile.setEmail((String)account.get("email"));
 
         return userProfile;
     });

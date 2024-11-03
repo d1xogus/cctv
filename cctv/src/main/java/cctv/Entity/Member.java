@@ -18,7 +18,7 @@ import org.hibernate.annotations.DynamicUpdate;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "memberId")
+    @Column(name = "memberid")
     private Long memberId;
 
     @Column(name = "passwd")

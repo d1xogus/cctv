@@ -37,7 +37,7 @@ spring:
             redirect-uri: http://localhost:8080/naver
             authorization-grant-type: authorization_code
             client-name: Naver
-            scope: name
+            scope: name, email, profile_image
 
           kakao:
             client-id: f768ba6915a8b6719ac46d7646324cdd
@@ -45,7 +45,7 @@ spring:
             client-secret: 1NhgtpmqAbSrdCQug2nTejwjsfLQr7eg
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
-            scope: profile_nickname, profile_image
+            scope: profile_nickname, profile_image, account_email
             client-name: Kakao
 
         provider:

@@ -70,7 +70,7 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
     }
 
     public Member updateOrSaveUser(UserProfile userProfile) {
-        log.debug("Attempting to find user by email: {} and provider: {}", userProfile.getEmail(), userProfile.getProvider());
+        log.info("Attempting to find user by email: {} and provider: {}", userProfile.getEmail(), userProfile.getProvider());
         Member member = memberRepository
                 .findUserByEmailAndProvider(userProfile.getEmail(), userProfile.getProvider())
                 .map(value -> value.updateUser(userProfile.getUsername(), userProfile.getEmail(), userProfile.getProvider()))
