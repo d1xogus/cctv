@@ -23,8 +23,8 @@ public class SecurityConfig {
                 .formLogin(form -> form.disable()) // 폼 로그인 사용 Xs
 
                 .authorizeHttpRequests(auth -> auth // 요청에 인증 절차 필요
-                        .requestMatchers("/","/oauth/**", "/oauth2/**").permitAll()// 루트 경로는 인증 절차 생략
-                        .requestMatchers("/**").hasAuthority("USER")
+                        .requestMatchers("/","/oauth/**").permitAll()// 루트 경로는 인증 절차 생략
+                        .requestMatchers("/oauth2/**").hasRole("USER")
                         .anyRequest().authenticated() // 다른 모든 요청에 인증 필요a
                 )
                 .oauth2Login(oauth2 -> oauth2 // OAuth2를 통한 로그인 사용

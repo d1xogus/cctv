@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -18,22 +20,34 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/oauth2")
 public class MemberController {
     private final MemberService memberService;
-    @GetMapping("/code/kakao")
+    @GetMapping("/oauth/loginInfo")
     public String getJson(Authentication authentication) {
-        log.info("sdfsdf");
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-
         Map<String, Object> attributes = oAuth2User.getAttributes();
-
+        log.info("sdfsdf: {}", attributes);
+        log.info("Authorities: {}", authentication.getAuthorities());
         return attributes.toString();
     }
 
-    @GetMapping("/{memberId}")
-    public Member member(@PathVariable Long memberId){
-        return memberService.get(memberId);
+//    @GetMapping("/")
+//    public Member member(@AuthenticationPrincipal OAuth2User oAuth2User){
+//        log.info("23 : {}", oAuth2User);
+//        String email = oAuth2User.getAttribute("email");
+//        return memberService.get(email);
+//    }
+
+    @GetMapping("/oauth2")
+    public Member member(Authentication authentication) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof OAuth2User)) {
+            log.warn("Authentication is null or not an instance of OAuth2User");
+            return null;
+        }
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        log.info("OAuth2User: {}", oAuth2User);
+        String email = oAuth2User.getAttribute("email");
+        return memberService.get(email);
     }
 
     @PatchMapping("/{memberId}")

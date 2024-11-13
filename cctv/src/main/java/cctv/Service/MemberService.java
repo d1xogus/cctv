@@ -16,10 +16,10 @@ import java.util.NoSuchElementException;
 public class MemberService {
     private final MemberRepository memberRepository;
 
-    public Member get(Long memberId) {
+    public Member get(String email) {
         log.info("qwer");
-        return memberRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new NoSuchElementException("Member not found with ID: " + memberId));
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("Member not found with ID: " + email));
     }
     @Transactional
     public Member update(Long memberId, MemberDTO memberDTO){
