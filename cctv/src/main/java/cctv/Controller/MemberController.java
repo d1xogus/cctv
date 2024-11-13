@@ -47,7 +47,8 @@ public class MemberController {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         log.info("OAuth2User: {}", oAuth2User);
         String email = oAuth2User.getAttribute("email");
-        return memberService.get(email);
+        String provider = oAuth2User.getAttribute("provider");
+        return memberService.get(email, provider);
     }
 
     @PatchMapping("/{memberId}")

@@ -22,6 +22,7 @@ public enum OAuthAttributes {
 
         userProfile.setUserName(responseValue.get("name"));
         userProfile.setEmail(responseValue.get("email"));
+        userProfile.setRoll("ROLE_USER");
 
         return userProfile;
     }),

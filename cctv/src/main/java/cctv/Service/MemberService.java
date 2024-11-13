@@ -16,9 +16,9 @@ import java.util.NoSuchElementException;
 public class MemberService {
     private final MemberRepository memberRepository;
 
-    public Member get(String email) {
+    public Member get(String email, String provider) {
         log.info("qwer");
-        return memberRepository.findByEmail(email)
+        return memberRepository.findUserByEmailAndProvider(email, provider)
                 .orElseThrow(() -> new NoSuchElementException("Member not found with ID: " + email));
     }
     @Transactional
