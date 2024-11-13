@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.util.Optional;
+
 @Table(name = "member")
 @Entity
 @Data
@@ -64,11 +66,11 @@ public class Member {
     }
 
     public Member update(MemberDTO memberDTO) {
-        this.name = memberDTO.getName();
-        this.email = memberDTO.getEmail();
-        this.roll = memberDTO.getRoll();
-        this.provider = memberDTO.getProvider();
-        this.phone = memberDTO.getPhone();
+        this.name = Optional.ofNullable(memberDTO.getName()).orElse(this.name);
+        this.email = Optional.ofNullable(memberDTO.getEmail()).orElse(this.email);
+        this.roll = Optional.ofNullable(memberDTO.getRoll()).orElse(this.roll);
+        this.provider = Optional.ofNullable(memberDTO.getProvider()).orElse(this.provider);
+        this.phone = Optional.ofNullable(memberDTO.getPhone()).orElse(this.phone);
         return this;
     }
 }

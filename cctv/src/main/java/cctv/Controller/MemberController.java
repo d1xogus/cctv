@@ -39,9 +39,11 @@ public class MemberController {
         return memberService.get(email, provider);
     }
 
-    @PatchMapping("/{memberId}")
-    public ResponseEntity<Member> update(@PathVariable Long memberId, @RequestBody MemberDTO memberDTO){
-        Member updated = memberService.update(memberId, memberDTO);
+    @PatchMapping("/oauth2")
+    public ResponseEntity<Member> update(@AuthenticationPrincipal OAuth2User oAuth2User, @RequestBody MemberDTO memberDTO){
+        String email = oAuth2User.getAttribute("email");
+        String provider = oAuth2User.getAttribute("provider");
+        Member updated = memberService.update(email, provider, memberDTO);
         return (updated != null) ?
                 ResponseEntity.status(200).body(updated) :
                 ResponseEntity.status(400).build();

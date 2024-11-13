@@ -19,12 +19,12 @@ public class MemberService {
     public Member get(String email, String provider) {
         log.info("qwer");
         return memberRepository.findUserByEmailAndProvider(email, provider)
-                .orElseThrow(() -> new NoSuchElementException("Member not found with ID: " + email));
+                .orElseThrow(() -> new NoSuchElementException("Member not found with email: " + email));
     }
     @Transactional
-    public Member update(Long memberId, MemberDTO memberDTO){
+    public Member update(String email, String provider, MemberDTO memberDTO){
         log.info("MemberDTO 정보: {}", memberDTO);
-        Member target = memberRepository.findByMemberId(memberId).orElseThrow(() -> new NoSuchElementException("Member not found with ID: " + memberId));
+        Member target = memberRepository.findUserByEmailAndProvider(email, provider).orElseThrow(() -> new NoSuchElementException("Member not found with email: " + email));
         target = target.update(memberDTO);
         return target;
     }
