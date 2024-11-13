@@ -26,7 +26,7 @@ public class MemberController {
     public String getJson(Authentication authentication) {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = oAuth2User.getAttributes();
-        log.info("sdfsdf: {}", attributes);
+        log.info("sd: {}", attributes);
         log.info("Authorities: {}", authentication.getAuthorities());
         return attributes.toString();
     }
