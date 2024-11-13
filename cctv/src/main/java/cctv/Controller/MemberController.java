@@ -31,21 +31,9 @@ public class MemberController {
         return attributes.toString();
     }
 
-//    @GetMapping("/")
-//    public Member member(@AuthenticationPrincipal OAuth2User oAuth2User){
-//        log.info("23 : {}", oAuth2User);
-//        String email = oAuth2User.getAttribute("email");
-//        return memberService.get(email);
-//    }
-
     @GetMapping("/oauth2")
-    public Member member(Authentication authentication) {
-        if (authentication == null || !(authentication.getPrincipal() instanceof OAuth2User)) {
-            log.warn("Authentication is null or not an instance of OAuth2User");
-            return null;
-        }
-        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-        log.info("OAuth2User: {}", oAuth2User);
+    public Member member(@AuthenticationPrincipal OAuth2User oAuth2User){
+        log.info("23 : {}", oAuth2User);
         String email = oAuth2User.getAttribute("email");
         String provider = oAuth2User.getAttribute("provider");
         return memberService.get(email, provider);
