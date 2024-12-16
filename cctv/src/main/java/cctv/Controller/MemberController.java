@@ -31,7 +31,7 @@ public class MemberController {
         return attributes.toString();
     }
 
-    @GetMapping("/oauth2")
+    @GetMapping("/cleanguard")
     public Member member(@AuthenticationPrincipal OAuth2User oAuth2User){
         log.info("23 : {}", oAuth2User);
         String email = oAuth2User.getAttribute("email");
@@ -39,7 +39,7 @@ public class MemberController {
         return memberService.get(email, provider);
     }
 
-    @PatchMapping("/oauth2")
+    @PatchMapping("/cleanguard")
     public ResponseEntity<Member> update(@AuthenticationPrincipal OAuth2User oAuth2User, @RequestBody MemberDTO memberDTO){
         String email = oAuth2User.getAttribute("email");
         String provider = oAuth2User.getAttribute("provider");
