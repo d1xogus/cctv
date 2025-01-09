@@ -24,9 +24,19 @@ public class ImageController {
 
     @PostMapping("/")
     public List<String> uploadImages(@ModelAttribute ImageUploadDTO imageUploadDTO) {
-        log.info("Received files count: {}", imageUploadDTO.getImages().size());
-        for (MultipartFile file : imageUploadDTO.getImages()) {
-            log.info("File name: {}, size: {}", file.getOriginalFilename(), file.getSize());
+        if (imageUploadDTO.getImage() != null) {
+            imageUploadDTO.setImages(List.of(imageUploadDTO.getImage())); // 단일 파일을 리스트로 변환
+            log.info("Single file received: {}, size: {}",
+                    imageUploadDTO.getImage().getOriginalFilename(),
+                    imageUploadDTO.getImage().getSize());
+        }
+
+        // 다중 파일 처리 로그
+        if (!imageUploadDTO.getImages().isEmpty()) {
+            log.info("Received files count: {}", imageUploadDTO.getImages().size());
+            for (MultipartFile file : imageUploadDTO.getImages()) {
+                log.info("File name: {}, size: {}", file.getOriginalFilename(), file.getSize());
+            }
         }
         return imageService.uploadImage(imageUploadDTO);
     }

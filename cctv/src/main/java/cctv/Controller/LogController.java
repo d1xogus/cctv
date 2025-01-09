@@ -1,5 +1,6 @@
 package cctv.Controller;
 
+import cctv.DTO.LogDTO;
 import cctv.Entity.Image;
 import cctv.Entity.Log;
 import cctv.Repository.LogRepository;
@@ -7,10 +8,7 @@ import cctv.Service.LogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,8 +24,8 @@ public class LogController {
         return logService.get();
     }
 
-    @PatchMapping("/")
-    public ResponseEntity<Log> update(){
-        return logService.update();
+    @PatchMapping("/{logId}")
+    public ResponseEntity<Log> update(@PathVariable Long logId, @RequestBody LogDTO logDTO){
+        return logService.update(logId, logDTO);
     }
 }

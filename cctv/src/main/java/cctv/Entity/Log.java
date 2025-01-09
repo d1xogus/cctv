@@ -1,5 +1,6 @@
 package cctv.Entity;
 
+import cctv.DTO.LogDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
@@ -24,4 +25,12 @@ public class Log {
 
     @Column(name = "result")
     private String result;
+
+    public static Log toEntity(LogDTO logDTO, Image image) {
+        return Log.builder()
+                .logId(logDTO.getLogId())
+                .image(image) // 이미지를 직접 매핑
+                .result(logDTO.getResult())
+                .build();
+    }
 }

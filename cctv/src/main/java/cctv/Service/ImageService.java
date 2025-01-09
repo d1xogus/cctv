@@ -38,7 +38,7 @@ public class ImageService {
         List<String> resultList = new ArrayList<>();
 
         for(MultipartFile multipartFile : imageUploadDTO.getImages()) {
-            String value = upload(multipartFile);
+            String value = upload(multipartFile, imageUploadDTO.getTimestamp());
             resultList.add(value);
         }
         log.info("resultList:",resultList);
@@ -46,7 +46,7 @@ public class ImageService {
     }
 
     @Transactional
-    public String upload(MultipartFile multipartFile){
+    public String upload(MultipartFile multipartFile, String timestamp){
         String name = multipartFile.getOriginalFilename();
         Image image = new Image(name);
 
@@ -59,8 +59,10 @@ public class ImageService {
 
             String path = amazonS3Client.getUrl(bucket, name).toString();
             image.setPath(path);
+            image.setTime(timestamp);
         } catch(IOException e) {
-
+            log.error("Error uploading file: {}", e.getMessage());
+            throw new RuntimeException("File upload failed", e);
         }
 
         imageRepository.save(image);

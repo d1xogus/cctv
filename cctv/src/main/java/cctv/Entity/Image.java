@@ -32,6 +32,9 @@ public class Image {
     @Column(name = "path")  // S3 내부 이미지에 접근할 수 있는 URL
     private String path;
 
+    @Column(name = "time")
+    private String time;
+
     public Image(String name) {
         this.name = name;
         this.path = "";

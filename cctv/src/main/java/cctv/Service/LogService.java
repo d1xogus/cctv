@@ -1,10 +1,12 @@
 package cctv.Service;
 
+import cctv.DTO.LogDTO;
 import cctv.Entity.Image;
 import cctv.Entity.Log;
 import cctv.Repository.LogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,5 +34,15 @@ public class LogService {
             throw new RuntimeException("No images found to delete");
         }
         logRepository.deleteAll(target);
+    }
+
+    public ResponseEntity<Log> update(Long logId, LogDTO logDTO) {
+        Log log = logRepository.findById(logId).orElseThrow(() -> new RuntimeException("Log not found"));
+        // DTO의 정보를 사용해 로그 업데이트
+        if (logDTO.getResult() != null) {
+            log.setResult(logDTO.getResult());
+        }
+        Log updatedLog = logRepository.save(log);
+        return ResponseEntity.ok(updatedLog);
     }
 }
