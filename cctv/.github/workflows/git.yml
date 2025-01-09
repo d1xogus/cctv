@@ -26,6 +26,6 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.REMOTE_PRIVATE_KEY }} # ec2 instance pem key
           script: | # 실행할 스크립트
-            cd /cctv
+            cd /cctv/cctv
             git pull origin master
-            sudo systemctl start cctv
+            ./gradlew build
