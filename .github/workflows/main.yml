@@ -16,7 +16,7 @@ jobs:
 
       - name: Decode application.yml
         run: |
-          echo ${{ secrets.APPLICATION_SECRET_YML }} | base64 --decode > src/main/resources/application.yml
+          echo ${{ secrets.YML }} | base64 --decode > src/main/resources/application.yml
           echo "application.yml created successfully."
 
       - name: ssh to ec2
