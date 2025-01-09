@@ -1,0 +1,31 @@
+#git.yml
+name: Deploy to Amazon ECS
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest # 실행될 인스턴스 OS와 버전
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Decode application.yml
+        run: |
+          echo ${{ secrets.APPLICATION_SECRET_YML }} | base64 --decode > src/main/resources/application.yml
+          echo "application.yml created successfully."
+
+      - name: ssh to ec2
+        uses: appleboy/ssh-action@master # ssh 접속하는 오픈소스
+        with:
+          host: ${{ secrets.REMOTE_IP }} # 인스턴스 IP
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.REMOTE_PRIVATE_KEY }} # ec2 instance pem key
+          script: | # 실행할 스크립트
+            cd /cctv
+            git pull origin master
+            sudo systemctl start cctv
