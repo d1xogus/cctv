@@ -17,8 +17,7 @@ jobs:
       # Step 2: Decode application.yml
       - name: Decode application.yml
         run: |
-          mkdir -p src/main/resources
-          echo ${{ secrets.YML }} | base64 --decode > src/main/resources/application.yml
+          echo ${{ secrets.YML }} | base64 --decode > application.yml
 
       # Step 3: Copy application.yml to EC2
       - name: Copy application.yml to EC2
@@ -27,8 +26,8 @@ jobs:
           host: ${{ secrets.REMOTE_IP }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.REMOTE_PRIVATE_KEY }}
-          source: "./src/main/resources/application.yml"
-          target: "/home/ec2-user/cctv/cctv/src/main/resources/application.yml"
+          source: "./application.yml"
+          target: "/home/ec2-user/cctv/cctv/src/main/resources/"
 
       # Step 4: SSH to EC2 and build application
       - name: Build application on EC2
