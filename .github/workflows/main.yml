@@ -25,7 +25,7 @@ jobs:
           host: ${{ secrets.REMOTE_IP }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.REMOTE_PRIVATE_KEY }}
-          source: "./application.yml"
+          source: "./src/main/resources/application.yml"
           target: "/home/ec2-user/cctv/cctv/src/main/resources/application.yml"
 
 
