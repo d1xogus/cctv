@@ -27,8 +27,8 @@ jobs:
           host: ${{ secrets.REMOTE_IP }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.REMOTE_PRIVATE_KEY }}
-          source: "./application.yml"
-          target: "/home/ec2-user/cctv/cctv/src/main/resources/"
+          source: "./src/main/resources/application.yml"
+          target: "/home/ec2-user/cctv/cctv/src/main/resources/application.yml"
 
       # Step 4: SSH to EC2 and build application
       - name: Build application on EC2
