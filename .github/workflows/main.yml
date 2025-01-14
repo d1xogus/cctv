@@ -18,6 +18,7 @@ jobs:
       - name: Decode application.yml
         run: |
           echo ${{ secrets.YML }} | base64 --decode > application.yml
+          ls -al
 
       # Step 3: Copy application.yml to EC2
       - name: Copy application.yml to EC2
