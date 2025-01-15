@@ -17,7 +17,6 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     public Member get(String email, String provider) {
-        log.info("qwer");
         return memberRepository.findUserByEmailAndProvider(email, provider)
                 .orElseThrow(() -> new NoSuchElementException("Member not found with email: " + email));
     }
