@@ -31,6 +31,7 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/") // 로그아웃 성공 후 리다이렉트 경로
                         .invalidateHttpSession(true) // 세션 무효화
                         .deleteCookies("JSESSIONID") // JSESSIONID 쿠키 삭제
+                        .clearAuthentication(true) // 인증 정보 삭제
                         .permitAll() // 로그아웃 요청은 인증 없이 접근 가능
                 )
                 .oauth2Login(oauth2 -> oauth2 // OAuth2를 통한 로그인 사용
