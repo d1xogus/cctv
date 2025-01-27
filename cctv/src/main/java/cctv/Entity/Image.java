@@ -23,11 +23,9 @@ public class Image {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "cctvid")
-    private Long cctvId;
-
-    @Column(name = "event")
-    private String event;
+    @OneToOne
+    @JoinColumn(name = "cctvid")
+    private Cctv cctv;
 
     @Column(name = "path")  // S3 내부 이미지에 접근할 수 있는 URL
     private String path;

@@ -60,7 +60,6 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
                                   Map<String, Object> attributes,
                                   UserProfile userProfile) {
         Map<String, Object> customAttribute = new ConcurrentHashMap<>();
-        log.debug("getcustomattribute");
         customAttribute.put(userNameAttributeName, attributes.get(userNameAttributeName));
         customAttribute.put("provider", registrationId);
         customAttribute.put("name", userProfile.getUsername());

@@ -31,9 +31,9 @@ public class Member {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "roll")
-    @ColumnDefault("'ROLE_USER'")
-    private String roll;
+    @OneToOne
+    @JoinColumn(name = "rollid")
+    private Role role;
 
     @Column(name = "email")
     private String email;
@@ -48,9 +48,6 @@ public class Member {
         this.name = name;
         this.email = email;
         this.provider = provider;
-        if (this.roll == null) {
-            this.roll = "ROLE_USER";  // 기본 역할 설정
-        }
         return this;
     }
 
@@ -60,7 +57,7 @@ public class Member {
                 .name(getName())
                 .passwd(getPasswd())
                 .email(getEmail())
-                .roll(getRoll())
+                .role(getRole())
                 .provider(getProvider())
                 .build();
     }
@@ -68,9 +65,10 @@ public class Member {
     public Member update(MemberDTO memberDTO) {
         this.name = Optional.ofNullable(memberDTO.getName()).orElse(this.name);
         this.email = Optional.ofNullable(memberDTO.getEmail()).orElse(this.email);
-        this.roll = Optional.ofNullable(memberDTO.getRoll()).orElse(this.roll);
+        this.role = Optional.ofNullable(memberDTO.getRole()).orElse(this.role);
         this.provider = Optional.ofNullable(memberDTO.getProvider()).orElse(this.provider);
         this.phone = Optional.ofNullable(memberDTO.getPhone()).orElse(this.phone);
         return this;
     }
+
 }

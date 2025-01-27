@@ -4,6 +4,7 @@ import cctv.DTO.LogDTO;
 import cctv.Entity.Image;
 import cctv.Entity.Log;
 import cctv.Repository.LogRepository;
+import cctv.Repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +17,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LogService {
     private final LogRepository logRepository;
+    private final RoleRepository roleRepository;
 
-    public List<Log> get(){
-        return logRepository.findAll();
+    public List<Log> get(String roleName){
+        List<Long> cctvIds = roleRepository.findByRoleName(roleName);
+        return logRepository.findByImage_Cctv_IdIn(cctvIds);
     }
 
     public void make(Image image) {

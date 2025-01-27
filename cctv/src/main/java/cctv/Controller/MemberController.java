@@ -7,6 +7,7 @@ import cctv.Entity.Member;
 import cctv.Service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,18 +23,26 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    private String clientId;
+
     @GetMapping("/oauth/loginInfo")
     public String getJson(Authentication authentication) {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = oAuth2User.getAttributes();
-        log.info("sd: {}", attributes);
-        log.info("Authorities: {}", authentication.getAuthorities());
         return attributes.toString();
     }
 
+    @GetMapping("/cleanguard/logout")
+    public String logoutKakao() {
+        String logoutRedirectUri = "/";
+
+        return "redirect:https://kauth.kakao.com/oauth/logout?client_id=" + clientId + "&logout_redirect_uri=" + logoutRedirectUri;
+    }
+
     @GetMapping("/cleanguard")
-    public Member member(@AuthenticationPrincipal OAuth2User oAuth2User){
-        log.info("23 : {}", oAuth2User);
+    public Member get(@AuthenticationPrincipal OAuth2User oAuth2User){
         String email = oAuth2User.getAttribute("email");
         String provider = oAuth2User.getAttribute("provider");
         return memberService.get(email, provider);

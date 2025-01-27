@@ -6,6 +6,7 @@ import cctv.Entity.Log;
 import cctv.Entity.Member;
 import cctv.Repository.ImageRepository;
 import cctv.Repository.LogRepository;
+import cctv.Repository.RoleRepository;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -27,7 +28,7 @@ import java.util.NoSuchElementException;
 public class ImageService {
     private final AmazonS3Client amazonS3Client;
     private final ImageRepository imageRepository;
-    private final LogRepository logRepository;
+    private final RoleRepository roleRepository;
     private final LogService logService;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -71,8 +72,9 @@ public class ImageService {
         return image.getPath();
     }
 
-    public List<Image> get(){
-        return imageRepository.findAll();
+    public List<Image> get(String roleName){
+        List<Long> cctvIds = roleRepository.findByRoleName(roleName);
+        return imageRepository.findByCctv_Id(cctvIds);
     }
 
     public void delete(List<Long> imageIds) {

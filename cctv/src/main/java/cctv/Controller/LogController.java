@@ -19,9 +19,9 @@ import java.util.List;
 public class LogController {
     private final LogService logService;
 
-    @GetMapping("/")
-    public List<Log> log(){
-        return logService.get();
+    @GetMapping("/{roleName}")
+    public List<Log> log(@PathVariable String roleName){
+        return logService.get(roleName);
     }
 
     @PatchMapping("/{logId}")
