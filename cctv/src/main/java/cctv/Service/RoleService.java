@@ -20,8 +20,12 @@ public class RoleService {
         return roleRepository.findAll();
     }
 
-    public Role make(RoleDTO roleDTO) {
-        Role role = new Role();
-        return null;
+    public RoleDTO make(RoleDTO roleDTO) {
+        //DTO를 엔터티로 변환
+        Role role = Role.toEntity(roleDTO);
+        // 엔터티를 데이터베이스에 저장
+        Role savedRole = roleRepository.save(role);
+        //저장된 엔터티를 DTO로 변환하여 반환
+        return RoleDTO.toDTO(savedRole);
     }
 }

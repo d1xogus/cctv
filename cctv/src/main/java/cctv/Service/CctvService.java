@@ -1,6 +1,7 @@
 package cctv.Service;
 
 
+import cctv.DTO.CctvDTO;
 import cctv.DTO.LogDTO;
 import cctv.Entity.Cctv;
 import cctv.Entity.Log;
@@ -24,7 +25,13 @@ public class CctvService {
 
     public List<Cctv> get(String roleName){
         List<Long> cctvIds = roleRepository.findByRoleName(roleName);
-        return cctvRepository.findById(cctvIds);
+        return cctvRepository.findByCctvIdIn(cctvIds);
+    }
+
+    public CctvDTO make(CctvDTO cctvDTO){
+        Cctv cctv = Cctv.toEntity(cctvDTO);
+        Cctv savedCctv = cctvRepository.save(cctv);
+        return CctvDTO.toDTO(savedCctv);
     }
 
     public ResponseEntity<Cctv> update(Long cctvId, LogDTO logDTO) {

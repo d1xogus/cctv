@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CctvRepository extends JpaRepository<Cctv, Long> {
-    List<Cctv> findById(List<Long> cctvIds);
+    List<Cctv> findByCctvIdIn(List<Long> cctvIds);
     Cctv findByCctvId(Long cctvId);
 }

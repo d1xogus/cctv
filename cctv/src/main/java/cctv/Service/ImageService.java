@@ -74,7 +74,7 @@ public class ImageService {
 
     public List<Image> get(String roleName){
         List<Long> cctvIds = roleRepository.findByRoleName(roleName);
-        return imageRepository.findByCctv_Id(cctvIds);
+        return imageRepository.findByCctv_CctvIdIn(cctvIds);
     }
 
     public void delete(List<Long> imageIds) {

@@ -23,7 +23,7 @@ public class RoleController {
     }
 
     @PostMapping("/")
-    public Role make(@ModelAttribute RoleDTO roleDTO){ // modelattribute로 받은 데이터와 roleDTO를 매핑
+    public RoleDTO make(@ModelAttribute RoleDTO roleDTO){ // modelattribute로 받은 데이터와 roleDTO를 매핑
         return roleService.make(roleDTO);
     }
 }

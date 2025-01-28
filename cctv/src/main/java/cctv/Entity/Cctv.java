@@ -1,6 +1,8 @@
 package cctv.Entity;
 
 
+import cctv.DTO.CctvDTO;
+import cctv.DTO.RoleDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
@@ -24,4 +26,12 @@ public class Cctv {
 
     @Column(name = "cctvDate")
     private Long cctvDate;
+
+    public static Cctv toEntity(CctvDTO cctvDTO) {
+        return Cctv.builder()
+                .cctvId(cctvDTO.getCctvId())
+                .location(cctvDTO.getLocation())
+                .cctvDate(cctvDTO.getCctvDate())
+                .build();
+    }
 }

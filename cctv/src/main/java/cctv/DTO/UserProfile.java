@@ -3,6 +3,7 @@ package cctv.DTO;
 import cctv.Entity.Member;
 import cctv.Entity.Role;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -25,7 +26,7 @@ public class UserProfile {
         this.email = email;
     }
 
-    public void setRoll(Role role) {this.role = role;}
+    public void setRole(Role role) {this.role = role;}
 
     // DTO 파일을 통하여 Entity를 생성하는 메소드
     public Member toEntity() {

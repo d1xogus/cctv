@@ -23,7 +23,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth // 요청에 인증 절차 필요
                         .requestMatchers("/","/oauth/**").permitAll()// 루트 경로는 인증 절차 생략
-                        .requestMatchers("/oauth2", "/cleanguard/**").hasAuthority("ROLE_USER")
+                        //.requestMatchers("/oauth2", "/cleanguard/**").hasAuthority("ROLE_USER")
                         .anyRequest().authenticated() // 다른 모든 요청에 인증 필요a
                 )
                 .logout(logout -> logout // 로그아웃 설정

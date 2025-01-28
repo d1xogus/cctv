@@ -7,5 +7,5 @@ import java.util.List;
 
 
 public interface ImageRepository extends JpaRepository<Image, Long> {
-    List<Image> findByCctv_Id(List<Long> cctvId);
+    List<Image> findByCctv_CctvIdIn(List<Long> cctvId);
 }
