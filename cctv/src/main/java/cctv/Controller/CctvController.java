@@ -25,7 +25,7 @@ public class CctvController {
     }
 
     @PostMapping("/")
-    public CctvDTO make(@ModelAttribute CctvDTO cctvDTO){
+    public CctvDTO make(@RequestBody CctvDTO cctvDTO){
         return cctvService.make(cctvDTO);
     }
 
