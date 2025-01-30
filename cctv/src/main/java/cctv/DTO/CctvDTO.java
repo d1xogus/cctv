@@ -11,8 +11,8 @@ import lombok.*;
 @AllArgsConstructor
 public class CctvDTO {
     private Long cctvId;
-    private Long location;
-    private Long cctvDate;
+    private String location;
+    private String cctvDate;
 
     public static CctvDTO toDTO(Cctv cctv) {
         return CctvDTO.builder()

@@ -22,10 +22,10 @@ public class Cctv {
     private Long cctvId;
 
     @Column(name = "location")
-    private Long location;
+    private String location;
 
     @Column(name = "cctvDate")
-    private Long cctvDate;
+    private String cctvDate;
 
     public static Cctv toEntity(CctvDTO cctvDTO) {
         return Cctv.builder()
