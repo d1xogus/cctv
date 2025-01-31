@@ -13,7 +13,7 @@ public class MemberDTO {
     private Long memberId;
     private String passwd;
     private String name;
-    private Role role;
+    private Long roleId;
     private String email;
     private String phone;
     private String provider;
@@ -22,7 +22,7 @@ public class MemberDTO {
         return MemberDTO.builder()
                 .memberId(member.getMemberId())
                 .name(member.getName())
-                .role(member.getRole())
+                .roleId(member.getRole().getRoleId())
                 .email(member.getEmail())
                 .phone(member.getPhone())
                 .provider(member.getProvider())

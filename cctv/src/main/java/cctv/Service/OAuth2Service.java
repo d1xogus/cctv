@@ -3,7 +3,9 @@ package cctv.Service;
 import cctv.Config.OAuthAttributes;
 import cctv.DTO.UserProfile;
 import cctv.Entity.Member;
+import cctv.Entity.Role;
 import cctv.Repository.MemberRepository;
+import cctv.Repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,12 +27,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final MemberRepository memberRepository;
+    private final RoleRepository roleRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService oAuth2UserService = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
-        log.debug("userRequest: {}", userRequest);
         String registrationId = userRequest.getClientRegistration().getRegistrationId(); // 로그인을 수행한 서비스의 이름
 
         String userNameAttributeName = userRequest
@@ -48,7 +50,6 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
 
         Map<String, Object> customAttribute =
                 getCustomAttribute(registrationId, userNameAttributeName, attributes, userProfile);
-        log.info("232 : {}", customAttribute);
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
                 customAttribute,
@@ -70,10 +71,16 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
 
     public Member updateOrSaveUser(UserProfile userProfile) {
         log.info("Attempting to find user by email: {} and provider: {}", userProfile.getEmail(), userProfile.getProvider());
+        Role defaultRole = roleRepository.findById(1L)
+                .orElseThrow(() -> new RuntimeException("Default role not found"));
         Member member = memberRepository
                 .findUserByEmailAndProvider(userProfile.getEmail(), userProfile.getProvider())
                 .map(value -> value.updateUser(userProfile.getUsername(), userProfile.getEmail(), userProfile.getProvider()))
-                .orElse(userProfile.toEntity());
+                .orElseGet(() -> {
+                    Member newMember = userProfile.toEntity();
+                    newMember.setRole(defaultRole); // ✅ 기본 Role 설정
+                    return newMember;
+                });
 
         return memberRepository.save(member);
 

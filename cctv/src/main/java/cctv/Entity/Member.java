@@ -32,7 +32,7 @@ public class Member {
     private String name;
 
     @OneToOne
-    @JoinColumn(name = "rollid")
+    @JoinColumn(name = "roleId")
     private Role role;
 
     @Column(name = "email")
@@ -62,13 +62,5 @@ public class Member {
                 .build();
     }
 
-    public Member update(MemberDTO memberDTO) {
-        this.name = Optional.ofNullable(memberDTO.getName()).orElse(this.name);
-        this.email = Optional.ofNullable(memberDTO.getEmail()).orElse(this.email);
-        this.role = Optional.ofNullable(memberDTO.getRole()).orElse(this.role);
-        this.provider = Optional.ofNullable(memberDTO.getProvider()).orElse(this.provider);
-        this.phone = Optional.ofNullable(memberDTO.getPhone()).orElse(this.phone);
-        return this;
-    }
 
 }
