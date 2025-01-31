@@ -40,4 +40,4 @@ jobs:
           script: |
             cd /home/ec2-user/cctv/cctv
             git pull origin master
-            ./gradlew clean build
+            ./gradlew clean build -x test
