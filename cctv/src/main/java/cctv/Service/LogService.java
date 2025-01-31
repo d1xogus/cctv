@@ -3,6 +3,7 @@ package cctv.Service;
 import cctv.DTO.LogDTO;
 import cctv.Entity.Image;
 import cctv.Entity.Log;
+import cctv.Entity.Role;
 import cctv.Repository.LogRepository;
 import cctv.Repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,8 @@ public class LogService {
     private final RoleRepository roleRepository;
 
     public List<Log> get(String roleName){
-        List<Long> cctvIds = roleRepository.findByRoleName(roleName);
+        Role role = roleRepository.findByRoleName(roleName);
+        List<Long> cctvIds = role.getCctvId();
         return logRepository.findByImage_Cctv_CctvIdIn(cctvIds);
     }
 

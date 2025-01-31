@@ -5,6 +5,7 @@ import cctv.DTO.CctvDTO;
 import cctv.DTO.LogDTO;
 import cctv.Entity.Cctv;
 import cctv.Entity.Log;
+import cctv.Entity.Role;
 import cctv.Repository.CctvRepository;
 import cctv.Repository.LogRepository;
 import cctv.Repository.RoleRepository;
@@ -14,7 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -24,7 +27,9 @@ public class CctvService {
     private final RoleRepository roleRepository;
 
     public List<Cctv> get(String roleName){
-        List<Long> cctvIds = roleRepository.findByRoleName(roleName);
+        Role role = roleRepository.findByRoleName(roleName);
+        List<Long> cctvIds = role.getCctvId();
+
         return cctvRepository.findByCctvIdIn(cctvIds);
     }
 

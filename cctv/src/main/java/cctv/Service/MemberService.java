@@ -34,8 +34,6 @@ public class MemberService {
             target.setRole(newRole);
         }
         target.setName(memberDTO.getName());
-        target.setEmail(memberDTO.getEmail());
-        target.setProvider(memberDTO.getProvider());
         target.setPhone(memberDTO.getPhone());
         return target;
     }

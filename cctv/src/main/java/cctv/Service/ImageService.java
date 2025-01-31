@@ -4,6 +4,7 @@ import cctv.DTO.ImageUploadDTO;
 import cctv.Entity.Image;
 import cctv.Entity.Log;
 import cctv.Entity.Member;
+import cctv.Entity.Role;
 import cctv.Repository.ImageRepository;
 import cctv.Repository.LogRepository;
 import cctv.Repository.RoleRepository;
@@ -21,6 +22,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -73,7 +76,8 @@ public class ImageService {
     }
 
     public List<Image> get(String roleName){
-        List<Long> cctvIds = roleRepository.findByRoleName(roleName);
+        Role role = roleRepository.findByRoleName(roleName);
+        List<Long> cctvIds = role.getCctvId();
         return imageRepository.findByCctv_CctvIdIn(cctvIds);
     }
 

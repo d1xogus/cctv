@@ -25,9 +25,6 @@ public class Member {
     @Column(name = "memberid")
     private Long memberId;
 
-    @Column(name = "passwd")
-    private String passwd;
-
     @Column(name = "name")
     private String name;
 
@@ -55,7 +52,6 @@ public class Member {
         return Member.builder()
                 .memberId(getMemberId())
                 .name(getName())
-                .passwd(getPasswd())
                 .email(getEmail())
                 .role(getRole())
                 .provider(getProvider())
