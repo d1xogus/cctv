@@ -28,7 +28,7 @@ public class Member {
     @Column(name = "name")
     private String name;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "roleId")
     private Role role;
 
