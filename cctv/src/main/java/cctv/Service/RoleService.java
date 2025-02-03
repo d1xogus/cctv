@@ -38,6 +38,9 @@ public class RoleService {
         if (roleDTO.getRoleName() != null) {
             roleDTO.setRoleName(roleDTO.getRoleName());
         }
+        if (roleDTO.getCctvId() != null){
+            roleDTO.setCctvId(roleDTO.getCctvId());
+        }
         Role updatedRole = roleRepository.save(role);
         return ResponseEntity.ok(updatedRole);
     }
