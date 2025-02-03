@@ -53,7 +53,6 @@ public class ImageController {
     @DeleteMapping("/success")
     public ResponseEntity<String> success(@RequestParam List<Long> imageIds) {
         imageService.success(imageIds);
-        logService.
         return ResponseEntity.ok("Images deleted successfully");
     }
 }
