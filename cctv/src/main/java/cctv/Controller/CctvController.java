@@ -30,8 +30,8 @@ public class CctvController {
     }
 
     @PatchMapping("/{cctvId}")
-    public ResponseEntity<Cctv> update(@PathVariable Long cctvId, @RequestBody LogDTO logDTO){
-        return cctvService.update(cctvId, logDTO);
+    public ResponseEntity<Cctv> update(@PathVariable Long cctvId, @RequestBody CctvDTO cctvDTO){
+        return cctvService.update(cctvId, cctvDTO);
     }
 
     @DeleteMapping("/{cctvId}")

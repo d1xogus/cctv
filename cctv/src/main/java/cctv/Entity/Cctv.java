@@ -27,6 +27,12 @@ public class Cctv {
     @Column(name = "cctvDate")
     private String cctvDate;
 
+    @Column(name = "cctvName")
+    private String cctvName;
+
+    @Column(name = "webcamId")
+    private String webcamId;
+
     public static Cctv toEntity(CctvDTO cctvDTO) {
         return Cctv.builder()
                 .cctvId(cctvDTO.getCctvId())

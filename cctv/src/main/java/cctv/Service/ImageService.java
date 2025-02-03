@@ -77,7 +77,9 @@ public class ImageService {
 
     public List<Image> get(String roleName){
         Role role = roleRepository.findByRoleName(roleName);
+        log.info("role: ", role);
         List<Long> cctvIds = role.getCctvId();
+        log.info("cctvid: ", cctvIds);
         return imageRepository.findByCctv_CctvIdIn(cctvIds);
     }
 

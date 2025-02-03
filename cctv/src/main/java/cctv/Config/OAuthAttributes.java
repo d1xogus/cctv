@@ -7,16 +7,6 @@ import java.util.function.Function;
 
 public enum OAuthAttributes {
 
-    NAVER("naver", (attribute) -> {
-        UserProfile userProfile = new UserProfile();
-
-        Map<String, String> responseValue = (Map)attribute.get("response");
-
-        userProfile.setUserName(responseValue.get("name"));
-        userProfile.setEmail(responseValue.get("email"));
-        return userProfile;
-    }),
-
     KAKAO("kakao", (attribute) -> {
 
         Map<String, Object> account = (Map)attribute.get("kakao_account");

@@ -39,11 +39,20 @@ public class CctvService {
         return CctvDTO.toDTO(savedCctv);
     }
 
-    public ResponseEntity<Cctv> update(Long cctvId, LogDTO logDTO) {
+    public ResponseEntity<Cctv> update(Long cctvId, CctvDTO cctvDTO) {
         Cctv cctv = cctvRepository.findById(cctvId).orElseThrow(() -> new RuntimeException("Log not found"));
         // DTO의 정보를 사용해 로그 업데이트
-        if (logDTO.getResult() != null) {
-            logDTO.setResult(logDTO.getResult());
+        if (cctvDTO.getCctvName() != null) {
+            cctvDTO.setCctvName(cctvDTO.getCctvName());
+        }
+        if (cctvDTO.getCctvDate() != null){
+            cctvDTO.setCctvDate(cctv.getCctvDate());
+        }
+        if (cctvDTO.getLocation() != null){
+            cctvDTO.setLocation(cctv.getLocation());
+        }
+        if (cctvDTO.getWebcamId() != null){
+            cctvDTO.setWebcamId(cctv.getWebcamId());
         }
         Cctv updatedCctv = cctvRepository.save(cctv);
         return ResponseEntity.ok(updatedCctv);
