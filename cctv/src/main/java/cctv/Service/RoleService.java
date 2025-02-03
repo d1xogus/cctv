@@ -36,10 +36,10 @@ public class RoleService {
         Role role = roleRepository.findById(roleId).orElseThrow(() -> new RuntimeException("Log not found"));
         // DTO의 정보를 사용해 로그 업데이트
         if (roleDTO.getRoleName() != null) {
-            roleDTO.setRoleName(roleDTO.getRoleName());
+            role.setRoleName(roleDTO.getRoleName());
         }
         if (roleDTO.getCctvId() != null){
-            roleDTO.setCctvId(roleDTO.getCctvId());
+            role.setCctvId(roleDTO.getCctvId());
         }
         Role updatedRole = roleRepository.save(role);
         return ResponseEntity.ok(updatedRole);
