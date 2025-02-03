@@ -33,8 +33,8 @@ public class LogService {
         logRepository.save(log);
     }
 
-    public void delete(List<Long> imageIds) {
-        List<Log> target = logRepository.findByImage_ImageIdIn(imageIds);
+    public void delete(List<Long> logIds) {
+        List<Log> target = logRepository.findByLogIdIn(logIds);
         if (target.isEmpty()) {
             throw new RuntimeException("No images found to delete");
         }

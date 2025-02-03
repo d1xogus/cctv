@@ -1,6 +1,7 @@
 package cctv.Controller;
 
 import cctv.DTO.LogDTO;
+import cctv.Entity.Cctv;
 import cctv.Entity.Image;
 import cctv.Entity.Log;
 import cctv.Repository.LogRepository;
@@ -27,5 +28,11 @@ public class LogController {
     @PatchMapping("/{logId}")
     public ResponseEntity<Log> update(@PathVariable Long logId, @RequestBody LogDTO logDTO){
         return logService.update(logId, logDTO);
+    }
+
+    @DeleteMapping("/")
+    public ResponseEntity<String> delete(@RequestParam List<Long> cctvIds) {
+        logService.delete(cctvIds);
+        return ResponseEntity.status(200).body("success");
     }
 }

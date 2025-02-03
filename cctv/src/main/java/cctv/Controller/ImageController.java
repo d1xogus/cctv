@@ -3,6 +3,7 @@ package cctv.Controller;
 import cctv.DTO.ImageUploadDTO;
 import cctv.Entity.Image;
 import cctv.Service.ImageService;
+import cctv.Service.LogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequestMapping("/cleanguard/image")
 public class ImageController {
     private final ImageService imageService;
+    private final LogService logService;
 
     @PostMapping("/")
     public List<String> uploadImages(@ModelAttribute ImageUploadDTO imageUploadDTO) {
@@ -42,9 +44,16 @@ public class ImageController {
         return imageService.get(roleName);
     }
 
-    @DeleteMapping("/")
-    public ResponseEntity<String> delete(@RequestParam List<Long> imageIds) {
-        imageService.delete(imageIds);
+    @DeleteMapping("/fail")
+    public ResponseEntity<String> fail(@RequestParam List<Long> imageIds) {
+        imageService.fail(imageIds);
+        return ResponseEntity.ok("Images deleted successfully");
+    }
+
+    @DeleteMapping("/success")
+    public ResponseEntity<String> success(@RequestParam List<Long> imageIds) {
+        imageService.success(imageIds);
+        logService.
         return ResponseEntity.ok("Images deleted successfully");
     }
 }

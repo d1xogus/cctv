@@ -70,7 +70,7 @@ public class ImageService {
         }
 
         imageRepository.save(image);
-        logService.make(image);
+
 
         return image.getPath();
     }
@@ -81,7 +81,7 @@ public class ImageService {
         return imageRepository.findByCctv_CctvIdIn(cctvIds);
     }
 
-    public void delete(List<Long> imageIds) {
+    public void fail(List<Long> imageIds) {
         List<Image> target = imageRepository.findAllById(imageIds);
         if (target.isEmpty()) {
             throw new RuntimeException("No images found to delete");
@@ -90,11 +90,19 @@ public class ImageService {
             String s3Path = image.getPath(); // S3 경로
             DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucket, s3Path);
             amazonS3Client.deleteObject(deleteObjectRequest);
-            log.info("Deleted S3 object with key: {}", s3Path);
         }
-        logService.delete(imageIds);
-        // 데이터베이스에서 삭제
         imageRepository.deleteAll(target);
-        log.info("Deleted images: {}", imageIds);
+    }
+
+    @Transactional
+    public void success(List<Long> imageIds) {
+        List<Image> target = imageRepository.findAllById(imageIds);
+        if (target.isEmpty()) {
+            throw new RuntimeException("No images found to delete");
+        }
+        for (Image image : target) {
+            logService.make(image);
+        }
+        imageRepository.deleteAll(target);
     }
 }
