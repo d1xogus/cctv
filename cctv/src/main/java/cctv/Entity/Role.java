@@ -28,7 +28,7 @@ public class Role {
 
     @ElementCollection
     @CollectionTable(name = "role_cctvids", joinColumns = @JoinColumn(name = "roleId"))
-    @Column(name = "cctvid")
+    @Column(name = "cctvId")
     private List<Long> cctvId;
 
     public static Role toEntity(RoleDTO roleDTO) {
