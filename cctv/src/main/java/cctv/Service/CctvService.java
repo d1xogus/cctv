@@ -63,4 +63,8 @@ public class CctvService {
         cctvRepository.delete(deleted);
         return deleted;
     }
+
+    public List<Cctv> getAll() {
+        return cctvRepository.findAll();
+    }
 }

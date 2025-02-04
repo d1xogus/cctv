@@ -24,6 +24,11 @@ public class CctvController {
         return cctvService.get(roleName);
     }
 
+    @GetMapping("/")
+    public List<Cctv> getAll(){
+        return cctvService.getAll();
+    }
+
     @PostMapping("/")
     public CctvDTO make(@RequestBody CctvDTO cctvDTO){
         return cctvService.make(cctvDTO);
