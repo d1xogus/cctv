@@ -43,16 +43,16 @@ public class CctvService {
         Cctv cctv = cctvRepository.findById(cctvId).orElseThrow(() -> new RuntimeException("Log not found"));
         // DTO의 정보를 사용해 로그 업데이트
         if (cctvDTO.getCctvName() != null) {
-            cctvDTO.setCctvName(cctvDTO.getCctvName());
+            cctv.setCctvName(cctvDTO.getCctvName());
         }
         if (cctvDTO.getCctvDate() != null){
-            cctvDTO.setCctvDate(cctv.getCctvDate());
+            cctv.setCctvDate(cctvDTO.getCctvDate());
         }
         if (cctvDTO.getLocation() != null){
-            cctvDTO.setLocation(cctv.getLocation());
+            cctv.setLocation(cctvDTO.getLocation());
         }
         if (cctvDTO.getWebcamId() != null){
-            cctvDTO.setWebcamId(cctv.getWebcamId());
+            cctv.setWebcamId(cctvDTO.getWebcamId());
         }
         Cctv updatedCctv = cctvRepository.save(cctv);
         return ResponseEntity.ok(updatedCctv);

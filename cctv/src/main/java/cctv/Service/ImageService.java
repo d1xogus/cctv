@@ -77,21 +77,21 @@ public class ImageService {
 
     public List<Image> get(String roleName){
         Role role = roleRepository.findByRoleName(roleName);
-        log.info("role: ", role);
         List<Long> cctvIds = role.getCctvId();
-        log.info("cctvid: ", cctvIds);
         return imageRepository.findByCctv_CctvIdIn(cctvIds);
     }
 
+    @Transactional
     public void fail(List<Long> imageIds) {
         List<Image> target = imageRepository.findAllById(imageIds);
         if (target.isEmpty()) {
             throw new RuntimeException("No images found to delete");
         }
         for (Image image : target) {
-            String s3Path = image.getPath(); // S3 경로
-            DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucket, s3Path);
-            amazonS3Client.deleteObject(deleteObjectRequest);
+//            String s3Path = image.getPath(); // S3 경로
+//            DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucket, s3Path);
+//            amazonS3Client.deleteObject(deleteObjectRequest);
+            logService.make(image);
         }
         imageRepository.deleteAll(target);
     }

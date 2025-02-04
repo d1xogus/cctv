@@ -16,11 +16,11 @@ import org.hibernate.annotations.DynamicUpdate;
 public class Log {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "logid")
+    @Column(name = "logId")
     private Long logId;
 
     @OneToOne
-    @JoinColumn(name = "imageid")
+    @JoinColumn(name = "imageId")
     private Image image;
 
     @Column(name = "result")

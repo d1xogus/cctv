@@ -22,7 +22,7 @@ import java.util.Optional;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "memberid")
+    @Column(name = "memberId")
     private Long memberId;
 
     @Column(name = "name")

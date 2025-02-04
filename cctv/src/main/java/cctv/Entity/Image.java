@@ -17,14 +17,14 @@ import java.util.UUID;
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "imageid")
+    @Column(name = "imageId")
     private Long imageId;
 
     @Column(name = "name")
     private String name;
 
     @OneToOne
-    @JoinColumn(name = "cctvid")
+    @JoinColumn(name = "cctvId")
     private Cctv cctv;
 
     @Column(name = "path")  // S3 내부 이미지에 접근할 수 있는 URL

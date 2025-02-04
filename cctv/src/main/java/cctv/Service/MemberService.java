@@ -33,8 +33,12 @@ public class MemberService {
                     .orElseThrow(() -> new NoSuchElementException("Role not found with id: " + memberDTO.getRoleId()));
             target.setRole(newRole);
         }
-        target.setName(memberDTO.getName());
-        target.setPhone(memberDTO.getPhone());
+        if (memberDTO.getName() != null){
+            target.setName(memberDTO.getName());
+        }
+        if (memberDTO.getPhone() != null){
+            target.setPhone(memberDTO.getPhone());
+        }
         return target;
     }
 }
