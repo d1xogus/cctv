@@ -23,7 +23,7 @@ public class Image {
     @Column(name = "name")
     private String name;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "cctvId")
     private Cctv cctv;
 
