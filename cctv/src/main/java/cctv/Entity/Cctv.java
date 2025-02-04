@@ -38,6 +38,8 @@ public class Cctv {
                 .cctvId(cctvDTO.getCctvId())
                 .location(cctvDTO.getLocation())
                 .cctvDate(cctvDTO.getCctvDate())
+                .cctvName(cctvDTO.getCctvName())
+                .webcamId(cctvDTO.getWebcamId())
                 .build();
     }
 }
