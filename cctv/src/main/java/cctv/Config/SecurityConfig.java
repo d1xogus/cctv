@@ -50,7 +50,7 @@ public class SecurityConfig {
         return http.build();
 
     }
-    // ✅ CORS 설정을 관리하는 Bean 등록
+    // CORS 설정을 관리하는 Bean 등록
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
