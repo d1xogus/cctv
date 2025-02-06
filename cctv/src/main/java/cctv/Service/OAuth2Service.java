@@ -33,6 +33,9 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService oAuth2UserService = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
+        if (oAuth2User == null) {
+            throw new OAuth2AuthenticationException("Failed to load user details");
+        }
         String registrationId = userRequest.getClientRegistration().getRegistrationId(); // 로그인을 수행한 서비스의 이름
 
         String userNameAttributeName = userRequest
