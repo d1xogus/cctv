@@ -27,7 +27,7 @@ public class MemberController {
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String clientId;
 
-    @GetMapping("/oauth/loginInfo")
+    @GetMapping("/main")
     public String getJson(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return "사용자가 인증되지 않았습니다.";

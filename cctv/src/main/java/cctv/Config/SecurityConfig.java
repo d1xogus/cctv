@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .formLogin(form -> form.disable()) // 폼 로그인 사용 Xs
 
                 .authorizeHttpRequests(auth -> auth // 요청에 인증 절차 필요
-                        .requestMatchers("/","/oauth/**", "/login").permitAll()// 루트 경로는 인증 절차 생략
+                        .requestMatchers("/","/main", "/login").permitAll()// 루트 경로는 인증 절차 생략
                         //.requestMatchers("/oauth2", "/cleanguard/**").hasAuthority("ROLE_USER")
                         .anyRequest().authenticated() // 다른 모든 요청에 인증 필요a
                 )
@@ -40,7 +40,7 @@ public class SecurityConfig {
                         .permitAll() // 로그아웃 요청은 인증 없이 접근 가능
                 )
                 .oauth2Login(oauth2 -> oauth2 // OAuth2를 통한 로그인 사용
-                        .defaultSuccessUrl("/oauth/loginInfo", true) // 로그인 성공 시 이동할 URL 설정
+                        .defaultSuccessUrl("/main", true) // 로그인 성공 시 이동할 URL 설정
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2Service) // 로그인 성공 시 사용자 서비스 로직 설정
                         )
