@@ -29,6 +29,9 @@ public class MemberController {
 
     @GetMapping("/oauth/loginInfo")
     public String getJson(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "사용자가 인증되지 않았습니다.";
+        }
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = oAuth2User.getAttributes();
         return attributes.toString();
