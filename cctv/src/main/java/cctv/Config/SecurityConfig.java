@@ -34,7 +34,7 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2Service) // 로그인 성공 시 사용자 서비스 로직 설정
                         )
-                        .defaultSuccessUrl("/main", true) // 로그인 성공 시 이동할 URL 설정
+                        .defaultSuccessUrl("http://localhost:3000/main", true) // 로그인 성공 시 이동할 URL 설정
 
                 )
                 .logout(logout -> logout // 로그아웃 설정
