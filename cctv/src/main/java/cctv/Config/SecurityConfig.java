@@ -44,8 +44,8 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID") // JSESSIONID 쿠키 삭제
                         .clearAuthentication(true) // 인증 정보 삭제
                         .permitAll() // 로그아웃 요청은 인증 없이 접근 가능
-                );
-                // .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+                )
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         return http.build();
 
@@ -54,7 +54,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // 허용할 출처
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://3.36.174.53:8080")); // 허용할 출처
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")); // 허용할 메서드
         configuration.setAllowedHeaders(List.of("*")); // 모든 헤더 허용
         configuration.setAllowCredentials(true); // 쿠키 허용
