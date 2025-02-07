@@ -30,6 +30,7 @@ public class MemberController {
     @GetMapping("/main")
     public String getJson(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
+            log.error("로그인 실패: 사용자 정보를 가져올 수 없음");
             return "사용자가 인증되지 않았습니다.";
         }
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
