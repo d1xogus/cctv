@@ -44,8 +44,8 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID") // JSESSIONID 쿠키 삭제
                         .clearAuthentication(true) // 인증 정보 삭제
                         .permitAll() // 로그아웃 요청은 인증 없이 접근 가능
-                )
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+                );
+                // .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         return http.build();
 
