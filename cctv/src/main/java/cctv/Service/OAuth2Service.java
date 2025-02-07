@@ -31,14 +31,10 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2UserService oAuth2UserService = new DefaultOAuth2UserService();
+        log.info("OAuth2UserService 실행됨 - 요청 클라이언트: {}", userRequest.getClientRegistration().getRegistrationId());
+        OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
         log.info("OAuth2 로그인 시도 - 사용자 정보: {}", oAuth2User.getAttributes());
-
-        if (oAuth2User == null) {
-            log.error("OAuth2  로그인 실패: 사용자 정보를 가져올 수 없음");
-            throw new OAuth2AuthenticationException("Failed to load user details");
-        }
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId(); // 로그인을 수행한 서비스의 이름
 
