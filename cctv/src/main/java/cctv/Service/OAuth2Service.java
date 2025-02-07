@@ -36,7 +36,7 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
         log.info("OAuth2 로그인 시도 - 사용자 정보: {}", oAuth2User.getAttributes());
 
         if (oAuth2User == null) {
-            log.error("OAuth2 로그인 실패: 사용자 정보를 가져올 수 없음");
+            log.error("OAuth2  로그인 실패: 사용자 정보를 가져올 수 없음");
             throw new OAuth2AuthenticationException("Failed to load user details");
         }
 
