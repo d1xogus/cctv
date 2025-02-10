@@ -26,10 +26,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
     private static final String SECRET_KEY = "your-very-secure-secret-key-your-very-secure-secret-key"; // 최소 32바이트
-    private static final SecretKey secretKey =  Keys.hmacShaKeyFor(Base64.getDecoder().decode(SECRET_KEY));
+    private static final SecretKey secretKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30L;
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L * 24 * 7;
-    private static final String KEY_ROLE = "role";
+    private static final String KEY_ROLE = "roles";
     private final TokenService tokenService;
 
     public String generateAccessToken(Authentication authentication) {
