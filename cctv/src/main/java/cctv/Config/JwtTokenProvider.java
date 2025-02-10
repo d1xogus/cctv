@@ -82,6 +82,7 @@ public class JwtTokenProvider {
 
     public Authentication getAuthentication(String token) {
         Claims claims = parseClaims(token);     // JWT에서 Claims 추출
+        log.info("[JWT Claims] {}", claims);
         List<SimpleGrantedAuthority> authorities = getAuthorities(claims);      // 권한 정보 추출
 
         // JWT 안의 정보(Claims)에서 sub와 roles를 attributes 맵에 저장
