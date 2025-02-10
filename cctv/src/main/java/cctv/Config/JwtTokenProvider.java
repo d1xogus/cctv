@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class JwtTokenProvider {
-    private static final String SECRET_KEY = "your-very-secure-secret-key-your-very-secure-secret-key"; // 최소 32바이트
+    private static final String SECRET_KEY = "your-very-secure-and-longer-secret-key-your-very-secure-and-longer-secret-key"; // 64바이트 이상
     private static final SecretKey secretKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30L;
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L * 24 * 7;
