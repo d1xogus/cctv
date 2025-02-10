@@ -28,6 +28,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.info("token 인증성공");
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            log.info("[SecurityContext] 인증된 사용자: {}", authentication.getName());
+            log.info("[SecurityContext] 권한 정보: {}", authentication.getAuthorities());
         }
         filterChain.doFilter(request, response);
     }
