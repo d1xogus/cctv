@@ -11,6 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 public class MemberDTO {
     private Long memberId;
+    private Long sub;
     private String name;
     private Long roleId;
     private String email;
@@ -20,6 +21,7 @@ public class MemberDTO {
     public static MemberDTO toDTO(Member member){
         return MemberDTO.builder()
                 .memberId(member.getMemberId())
+                .sub(member.getSub())
                 .name(member.getName())
                 .roleId(member.getRole().getRoleId())
                 .email(member.getEmail())

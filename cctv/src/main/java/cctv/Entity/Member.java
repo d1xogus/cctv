@@ -25,6 +25,9 @@ public class Member {
     @Column(name = "memberId")
     private Long memberId;
 
+    @Column(name = "sub")
+    private Long sub;
+
     @Column(name = "name")
     private String name;
 
@@ -51,6 +54,7 @@ public class Member {
     public Member toEntity(MemberDTO memberDTO){
         return Member.builder()
                 .memberId(getMemberId())
+                .sub(getSub())
                 .name(getName())
                 .email(getEmail())
                 .role(getRole())

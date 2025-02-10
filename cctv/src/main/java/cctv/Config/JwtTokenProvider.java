@@ -11,14 +11,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -86,8 +84,13 @@ public class JwtTokenProvider {
         Claims claims = parseClaims(token);     // JWT에서 Claims 추출
         List<SimpleGrantedAuthority> authorities = getAuthorities(claims);      // 권한 정보 추출
 
+        // JWT 안의 정보(Claims)에서 sub와 roles를 attributes 맵에 저장
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("sub", claims.getSubject());
+        attributes.put("roles", claims.get("roles"));
+
         // 2. security의 User 객체 생성
-        User principal = new User(claims.getSubject(), "", authorities);
+        DefaultOAuth2User principal = new DefaultOAuth2User(authorities, attributes, "sub");
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 

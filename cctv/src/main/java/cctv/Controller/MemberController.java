@@ -45,7 +45,7 @@ public class MemberController {
         return "redirect:https://kauth.kakao.com/oauth/logout?client_id=" + clientId + "&logout_redirect_uri=" + logoutRedirectUri;
     }
 
-    @GetMapping("localhost:3000/main")
+    @GetMapping("/")
     public Member get(@AuthenticationPrincipal OAuth2User oAuth2User){
         String email = oAuth2User.getAttribute("email");
         String provider = oAuth2User.getAttribute("provider");
