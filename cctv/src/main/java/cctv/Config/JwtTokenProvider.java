@@ -1,0 +1,112 @@
+package cctv.Config;
+
+import cctv.Service.OAuth2Service;
+import cctv.Service.TokenService;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import javax.crypto.SecretKey;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Component
+@Slf4j
+@RequiredArgsConstructor
+public class JwtTokenProvider {
+    private static final String SECRET_KEY = "your-very-secure-secret-key-your-very-secure-secret-key"; // 최소 32바이트
+    private static final SecretKey secretKey =  Keys.hmacShaKeyFor(Base64.getDecoder().decode(SECRET_KEY));
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30L;
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L * 24 * 7;
+    private static final String KEY_ROLE = "role";
+    private final TokenService tokenService;
+
+    public String generateAccessToken(Authentication authentication) {
+        return generateToken(authentication, ACCESS_TOKEN_EXPIRE_TIME);
+    }
+
+    // 1. refresh token 발급
+    public void generateRefreshToken(Authentication authentication, String accessToken) {
+        String refreshToken = generateToken(authentication, REFRESH_TOKEN_EXPIRE_TIME);
+        tokenService.saveRefreshToken(authentication.getName(), refreshToken, accessToken); // redis에 저장
+    }
+
+    public String generateToken(Authentication authentication, long expireTime) {
+        Date now = new Date();
+        Date expiredDate = new Date(now.getTime() + expireTime);
+
+        return Jwts.builder()
+                .subject(authentication.getName())      // 사용자 정보 저장
+                .claim(KEY_ROLE, authentication.getAuthorities())       //권한정보저장
+                .issuedAt(now)  // 발급 시간
+                .expiration(expiredDate)    // 만료 시간
+                .signWith(secretKey, Jwts.SIG.HS512)    // 서명 알고리즘
+                .compact();
+    }
+
+    public String getTokenFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
+    public boolean validateToken(String token) {
+        if (!StringUtils.hasText(token)) {
+            return false;
+        }
+
+        try {
+            Claims claims = Jwts.parser()       // 0.12.x 버젼
+                    .verifyWith(secretKey)      //SecretKey 객체 사용
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+
+            return claims.getExpiration().after(new Date());        //만료 시간 체크
+        } catch (Exception e) {
+            log.error("[validateToken] 유효하지 않은 토큰입니다.");
+            return false;
+        }
+    }
+
+    public Authentication getAuthentication(String token) {
+        Claims claims = parseClaims(token);     // JWT에서 Claims 추출
+        List<SimpleGrantedAuthority> authorities = getAuthorities(claims);      // 권한 정보 추출
+
+        // 2. security의 User 객체 생성
+        User principal = new User(claims.getSubject(), "", authorities);
+        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+    }
+
+    private Claims parseClaims(String token) {
+        try {
+            return Jwts.parser().verifyWith(secretKey).build()
+                    .parseSignedClaims(token).getPayload();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims();
+        } catch (MalformedJwtException e) {
+            throw new JwtException("Invalid Token");
+        } catch (SecurityException e) {
+            throw new JwtException("Invalid JWT Signature");
+        }
+    }
+
+    private List<SimpleGrantedAuthority> getAuthorities(Claims claims) {
+        return Collections.singletonList(new SimpleGrantedAuthority(
+                claims.get(KEY_ROLE).toString()));       //  Claims에서 "ROLE" 정보 가져와 권한 설정
+    }
+
+}

@@ -55,6 +55,14 @@ dependencies {
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.767'
 //	implementation(platform("software.amazon.awssdk:bom:2.27.21"))
 //	implementation("software.amazon.awssdk:s3")
+
+	//jwt
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 test{

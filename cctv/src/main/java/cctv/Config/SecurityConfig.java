@@ -1,12 +1,15 @@
 package cctv.Config;
 
+import cctv.Handler.OAuth2LoginSuccessHandler;
 import cctv.Service.OAuth2Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -19,13 +22,13 @@ import java.util.List;
 public class SecurityConfig {
 
     private final OAuth2Service oAuth2Service;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable()) // csrf 보안 설정 사용 X
-                .formLogin(form -> form.disable()) // 폼 로그인 사용 Xs
-
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안 함
                 .authorizeHttpRequests(auth -> auth // 요청에 인증 절차 필요
                         .requestMatchers("/","/main", "/oauth/**", "/login").permitAll()// 루트 경로는 인증 절차 생략
                         .anyRequest().authenticated() // 다른 모든 요청에 인증 필요a
@@ -34,9 +37,10 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2Service) // 로그인 성공 시 사용자 서비스 로직 설정
                         )
-                        .defaultSuccessUrl("http://localhost:3000/main", true) // 로그인 성공 시 이동할 URL 설정
-
+                        .successHandler(new OAuth2LoginSuccessHandler(jwtTokenProvider)) // OAuth2 로그인 성공 후 JWT 발급
                 )
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // JWT 필터 추가
+
                 .logout(logout -> logout // 로그아웃 설정
                         .logoutUrl("/logout") // 로그아웃 요청 URL (기본값: /logout)
                         .logoutSuccessUrl("/") // 로그아웃 성공 후 리다이렉트 경로

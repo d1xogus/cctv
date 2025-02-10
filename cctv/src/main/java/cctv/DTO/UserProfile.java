@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Getter
+
 public class UserProfile {
     private String username; // 사용자 이름
     private String provider; // 로그인한 서비스
