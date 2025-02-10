@@ -31,6 +31,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안 함
                 .authorizeHttpRequests(auth -> auth // 요청에 인증 절차 필요
                         .requestMatchers("/","/main", "/oauth/**", "/login").permitAll()// 루트 경로는 인증 절차 생략
+                        .requestMatchers("/cctv/**").hasAuthority("ROLE_USER")
                         .anyRequest().authenticated() // 다른 모든 요청에 인증 필요a
                 )
                 .oauth2Login(oauth2 -> oauth2 // OAuth2를 통한 로그인 사용
