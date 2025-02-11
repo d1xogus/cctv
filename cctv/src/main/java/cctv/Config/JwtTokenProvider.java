@@ -46,7 +46,7 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .subject(authentication.getName())      // 사용자 정보 저장
-                .claim(KEY_ROLE, authentication.getAuthorities())       //권한정보저장
+                .claim(KEY_ROLE, authentication.getAuthorities().stream()) // ✅ roles을 List<String>으로 저장      //권한정보저장
                 .issuedAt(now)  // 발급 시간
                 .expiration(expiredDate)    // 만료 시간
                 .signWith(secretKey, Jwts.SIG.HS512)    // 서명 알고리즘
@@ -84,27 +84,14 @@ public class JwtTokenProvider {
         Claims claims = parseClaims(token);     // JWT에서 Claims 추출
         log.info("[JWT Claims] {}", claims);
 
-        List<String> roles;
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
-        Object rolesObject = claims.get("roles");
-
-        if (rolesObject instanceof List) {
-            roles = ((List<?>) rolesObject).stream()
-                    .map(role -> {
-                        if (role instanceof Map) {
-                            return ((Map<?, ?>) role).get("authority").toString(); // ✅ Map에서 "authority" 키 가져오기
-                        } else {
-                            return role.toString();
-                        }
-                    })
+        Object rolesObject = claims.get(KEY_ROLE);
+        if (rolesObject instanceof List<?>) {
+            authorities = ((List<?>) rolesObject).stream()
+                    .map(role -> new SimpleGrantedAuthority(role.toString())) // ✅ "ROLE_USER" 그대로 변환
                     .collect(Collectors.toList());
-        } else {
-            roles = Collections.emptyList(); // ✅ roles가 없는 경우 빈 리스트 반환
-        }
-
-        List<SimpleGrantedAuthority> authorities = roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+            }
 
         // JWT 안의 정보(Claims)에서 sub와 roles를 attributes 맵에 저장
         Map<String, Object> attributes = new HashMap<>();
@@ -135,3 +122,4 @@ public class JwtTokenProvider {
     }
 
 }
+
