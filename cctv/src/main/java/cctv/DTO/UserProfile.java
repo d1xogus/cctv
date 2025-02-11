@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 
 public class UserProfile {
     private String username; // 사용자 이름
+    private Long sub;
     private String provider; // 로그인한 서비스
     private String email; // 사용자의 이메일
     private Role role;
@@ -29,11 +30,14 @@ public class UserProfile {
 
     public void setRole(Role role) {this.role = role;}
 
+    public void setSub(Long sub) {this.sub = sub;}
+
     // DTO 파일을 통하여 Entity를 생성하는 메소드
     public Member toEntity() {
         log.info("Creating Member entity with username: {}, email: {}, provider: {}", this.username, this.email, this.provider);
         return Member.builder()
                 .name(this.username)
+                .sub(this.sub)
                 .email(this.email)
                 .provider(this.provider)
                 .role(this.role)

@@ -78,7 +78,7 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
                 .orElseThrow(() -> new RuntimeException("Default role not found"));
         Member member = memberRepository
                 .findUserByEmailAndProvider(userProfile.getEmail(), userProfile.getProvider())
-                .map(value -> value.updateUser(userProfile.getUsername(), userProfile.getEmail(), userProfile.getProvider()))
+                .map(value -> value.updateUser(userProfile.getUsername(), userProfile.getSub(), userProfile.getEmail(), userProfile.getProvider()))
                 .orElseGet(() -> {
                     Member newMember = userProfile.toEntity();
                     newMember.setRole(defaultRole); // ✅ 기본 Role 설정

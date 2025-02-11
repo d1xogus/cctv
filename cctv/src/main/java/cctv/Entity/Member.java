@@ -44,8 +44,9 @@ public class Member {
     @Column
     private String provider;
 
-    public Member updateUser(String name, String email, String provider) {
+    public Member updateUser(String name, Long sub, String email, String provider) {
         this.name = name;
+        this.sub = sub;
         this.email = email;
         this.provider = provider;
         return this;
