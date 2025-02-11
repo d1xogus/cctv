@@ -84,7 +84,24 @@ public class JwtTokenProvider {
         Claims claims = parseClaims(token);     // JWT에서 Claims 추출
         log.info("[JWT Claims] {}", claims);
 
-        List<String> roles = claims.get("roles", List.class);   // 권한 정보 추출
+        List<String> roles;
+        Object rolesObject = claims.get("roles");
+
+        if (rolesObject instanceof List) {
+            roles = ((List<?>) rolesObject).stream()
+                    .map(role -> {
+                        if (role instanceof Map) {
+                            return ((Map<?, ?>) role).get("authority").toString(); // ✅ Map에서 "authority" 키 가져오기
+                        } else {
+                            return role.toString();
+                        }
+                    })
+                    .collect(Collectors.toList());
+        } else {
+            roles = Collections.emptyList(); // ✅ roles가 없는 경우 빈 리스트 반환
+        }
+
+
         List<SimpleGrantedAuthority> authorities = roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
