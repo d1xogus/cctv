@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.crypto.SecretKey;
 import java.util.*;
@@ -46,7 +47,9 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .subject(authentication.getName())      // 사용자 정보 저장
-                .claim(KEY_ROLE, authentication.getAuthorities().stream()) // ✅ roles을 List<String>으로 저장      //권한정보저장
+                .claim(KEY_ROLE, authentication.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)  // ✅ 문자열(String) 리스트로 변환
+                        .collect(Collectors.toList()))  // ✅ JWT Claims에 List<String>으로 저장    //권한정보저장
                 .issuedAt(now)  // 발급 시간
                 .expiration(expiredDate)    // 만료 시간
                 .signWith(secretKey, Jwts.SIG.HS512)    // 서명 알고리즘
@@ -86,12 +89,17 @@ public class JwtTokenProvider {
 
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
-        Object rolesObject = claims.get(KEY_ROLE);
+        Object rolesObject = claims.get("roles");
+
         if (rolesObject instanceof List<?>) {
-            authorities = ((List<?>) rolesObject).stream()
-                    .map(role -> new SimpleGrantedAuthority(role.toString())) // ✅ "ROLE_USER" 그대로 변환
+            List<String> roleStrings = ((List<?>) rolesObject).stream()
+                    .map(Object::toString)  // ✅ 모든 요소를 String으로 변환
                     .collect(Collectors.toList());
-            }
+
+            authorities = roleStrings.stream()
+                    .map(SimpleGrantedAuthority::new)  // ✅ SimpleGrantedAuthority 변환
+                    .collect(Collectors.toList());
+        }
 
         // JWT 안의 정보(Claims)에서 sub와 roles를 attributes 맵에 저장
         Map<String, Object> attributes = new HashMap<>();
@@ -105,8 +113,11 @@ public class JwtTokenProvider {
 
     private Claims parseClaims(String token) {
         try {
-            return Jwts.parser().verifyWith(secretKey).build()
-                    .parseSignedClaims(token).getPayload();
+            return Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         } catch (MalformedJwtException e) {
