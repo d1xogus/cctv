@@ -73,7 +73,7 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
     }
 
     public Member updateOrSaveUser(UserProfile userProfile) {
-        log.info("Attempting to find user by email: {} and provider: {}", userProfile.getEmail(), userProfile.getProvider());
+        log.info("Attempting to find user by email: {} and provider: {}, and sub: {}", userProfile.getEmail(), userProfile.getProvider(), userProfile.getSub());
         Role defaultRole = roleRepository.findById(1L)  //ID가 1인 Role 엔티티를 데이터베이스에서 조회
                 .orElseThrow(() -> new RuntimeException("Default role not found"));
         Member member = memberRepository
