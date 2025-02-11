@@ -87,19 +87,11 @@ public class JwtTokenProvider {
         Claims claims = parseClaims(token);     // JWT에서 Claims 추출
         log.info("[JWT Claims] {}", claims);
 
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        List<String> roles = claims.get("roles", List.class);   // 권한 정보 추출
+        List<SimpleGrantedAuthority> authorities = roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
 
-        Object rolesObject = claims.get("roles");
-
-        if (rolesObject instanceof List<?>) {
-            List<String> roleStrings = ((List<?>) rolesObject).stream()
-                    .map(Object::toString)  // ✅ 모든 요소를 String으로 변환
-                    .collect(Collectors.toList());
-
-            authorities = roleStrings.stream()
-                    .map(SimpleGrantedAuthority::new)  // ✅ SimpleGrantedAuthority 변환
-                    .collect(Collectors.toList());
-        }
 
         // JWT 안의 정보(Claims)에서 sub와 roles를 attributes 맵에 저장
         Map<String, Object> attributes = new HashMap<>();
@@ -125,11 +117,6 @@ public class JwtTokenProvider {
         } catch (SecurityException e) {
             throw new JwtException("Invalid JWT Signature");
         }
-    }
-
-    private List<SimpleGrantedAuthority> getAuthorities(Claims claims) {
-        return Collections.singletonList(new SimpleGrantedAuthority(
-                claims.get(KEY_ROLE).toString()));       //  Claims에서 "ROLE" 정보 가져와 권한 설정
     }
 
 }
