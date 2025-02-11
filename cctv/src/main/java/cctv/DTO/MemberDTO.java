@@ -11,7 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 public class MemberDTO {
     private Long memberId;
-    private Long sub;
+    private String sub;
     private String name;
     private Long roleId;
     private String email;
