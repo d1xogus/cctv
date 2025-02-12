@@ -1,6 +1,8 @@
 package cctv.Config;
 
 import cctv.Entity.Member;
+import cctv.Entity.Role;
+import cctv.Repository.MemberRepository;
 import cctv.Service.OAuth2Service;
 import cctv.Service.TokenService;
 import io.jsonwebtoken.*;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
     private static final String SECRET_KEY = "your-very-secure-and-longer-secret-key-your-very-secure-and-longer-secret-key"; // 64바이트 이상
     private static final SecretKey secretKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    private final MemberRepository memberRepository;
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30L;
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L * 24 * 7;
     private static final String KEY_ROLE = "roles";
@@ -61,9 +64,18 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + expireTime);
 
+        Member member = memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new RuntimeException("Member not found with id: " + memberId));
+
+        // role이 null일 가능성이 있으므로 예외 처리 추가
+        String roleName = Optional.ofNullable(member.getRole())
+                .map(Role::getName)
+                .orElse("ROLE_USER"); // 기본값 설정
+
         return Jwts.builder()
                 .setSubject(String.valueOf(memberId)) //  sub에 memberId 사용
                 .claim("email", email)
+                .claim("roles", roleName)
                 .setIssuedAt(now)
                 .setExpiration(expiration)
                 .signWith(secretKey, Jwts.SIG.HS512)

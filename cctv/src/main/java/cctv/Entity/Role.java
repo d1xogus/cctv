@@ -38,4 +38,8 @@ public class Role {
                 .cctvId(roleDTO.getCctvId())
                 .build();
     }
+
+    public String getName() {
+        return this.roleName;
+    }
 }
