@@ -68,9 +68,9 @@ public class JwtTokenProvider {
                 .orElseThrow(() -> new RuntimeException("Member not found with id: " + memberId));
 
         // role이 null일 가능성이 있으므로 예외 처리 추가
-        String roleName = Optional.ofNullable(member.getRole())
-                .map(Role::getName)
-                .orElse("ROLE_USER"); // 기본값 설정
+        List<String> roleName = Optional.ofNullable(member.getRole())
+                .map(role -> List.of(role.getName()))
+                .orElse(List.of("ROLE_USER")); // 기본값 설정
 
         return Jwts.builder()
                 .setSubject(String.valueOf(memberId)) //  sub에 memberId 사용

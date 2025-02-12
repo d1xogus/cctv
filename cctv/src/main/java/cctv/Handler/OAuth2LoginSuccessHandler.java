@@ -85,12 +85,9 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
         String redirectUri = request.getParameter("redirect_uri");
         if (redirectUri == null || redirectUri.isBlank()) {
-            redirectUri = "http://localhost:3000/"; // 기본값 설정
+            redirectUri = "http://localhost:3000/main"; // 기본값 설정
         }
 
-        String frontHost = "localhost";
-        String frontPort = "3000";
-        String frontPath = "/";
         return UriComponentsBuilder.fromUriString(redirectUri)
                 .queryParams(queryParams)
                 .build()
