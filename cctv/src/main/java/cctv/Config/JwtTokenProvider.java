@@ -123,6 +123,7 @@ public class JwtTokenProvider {
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("sub", claims.getSubject());
         attributes.put("roles", claims.get("roles"));
+        attributes.put("email", claims.get("email"));
 
         // 2. security의 User 객체 생성
         DefaultOAuth2User principal = new DefaultOAuth2User(authorities, attributes, "sub");

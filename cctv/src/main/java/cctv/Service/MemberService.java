@@ -20,14 +20,14 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
 
-    public Member get(String email, String provider) {
-        return memberRepository.findUserByEmailAndProvider(email, provider)
+    public Member get(String email) {
+        return memberRepository.findUserByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("Member not found with email: " + email));
     }
     @Transactional
-    public Member update(String email, String provider, MemberDTO memberDTO){
+    public Member update(String email, MemberDTO memberDTO){
         log.info("MemberDTO 정보: {}", memberDTO);
-        Member target = memberRepository.findUserByEmailAndProvider(email, provider).orElseThrow(() -> new NoSuchElementException("Member not found with email: " + email));
+        Member target = memberRepository.findUserByEmail(email).orElseThrow(() -> new NoSuchElementException("Member not found with email: " + email));
         if (memberDTO.getRoleId() != null) {
             Role newRole = roleRepository.findById(memberDTO.getRoleId())
                     .orElseThrow(() -> new NoSuchElementException("Role not found with id: " + memberDTO.getRoleId()));

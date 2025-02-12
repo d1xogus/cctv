@@ -47,16 +47,22 @@ public class MemberController {
 
     @GetMapping("/")
     public Member get(@AuthenticationPrincipal OAuth2User oAuth2User){
-        String email = oAuth2User.getAttribute("email");
-        String provider = oAuth2User.getAttribute("provider");
-        return memberService.get(email, provider);
+        if (oAuth2User == null) {
+            log.error("로그인 실패: 사용자 정보를 가져올 수 없음");
+            return null;
+        }
+        String email = oAuth2User.getAttribute("email"); // JWT의 subject(email 또는 ID)
+        String role = oAuth2User.getAuthorities().toString(); // 역할 정보
+
+        log.info("로그인된 사용자: email={}, role={}", email, role);
+
+        return memberService.get(email);
     }
 
     @PatchMapping("/cleanguard")
     public ResponseEntity<Member> update(@AuthenticationPrincipal OAuth2User oAuth2User, @RequestBody MemberDTO memberDTO){
         String email = oAuth2User.getAttribute("email");
-        String provider = oAuth2User.getAttribute("provider");
-        Member updated = memberService.update(email, provider, memberDTO);
+        Member updated = memberService.update(email, memberDTO);
         return (updated != null) ?
                 ResponseEntity.status(200).body(updated) :
                 ResponseEntity.status(400).build();
