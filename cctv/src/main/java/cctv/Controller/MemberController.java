@@ -45,7 +45,7 @@ public class MemberController {
         return "redirect:https://kauth.kakao.com/oauth/logout?client_id=" + clientId + "&logout_redirect_uri=" + logoutRedirectUri;
     }
 
-    @GetMapping("/")
+    @GetMapping("/cleanguard")
     public Member get(@AuthenticationPrincipal OAuth2User oAuth2User){
         if (oAuth2User == null) {
             log.error("로그인 실패: 사용자 정보를 가져올 수 없음");
