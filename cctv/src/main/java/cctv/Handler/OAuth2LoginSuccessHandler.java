@@ -3,6 +3,7 @@ package cctv.Handler;
 import cctv.Config.JwtTokenProvider;
 import cctv.Entity.Member;
 import cctv.Entity.RefreshToken;
+import cctv.Repository.MemberRepository;
 import cctv.Repository.RefreshTokenRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,11 +19,13 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final MemberRepository memberRepository;
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L * 24 * 7;
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30L;
 
@@ -36,9 +39,24 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     private Member getAuthenticatedMember(Authentication authentication) {
         DefaultOAuth2User oAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
-        Long memberId = Long.valueOf(oAuth2User.getAttribute("sub")); // JWT에서 sub을 memberId로 사용
+        Long kakaoId = Long.valueOf(oAuth2User.getAttribute("id"));
         String email = oAuth2User.getAttribute("email");
-        return new Member(memberId, email); // ✅ Member 객체 생성
+
+        // ✅ DB에서 기존 회원 조회
+        Optional<Member> existingMember = memberRepository.findBySub(kakaoId);
+
+        if (existingMember.isPresent()) {
+            // ✅ 기존 회원이 있으면 DB의 memberId 사용
+            return existingMember.get();
+        } else {
+            // ✅ 신규 회원이면 DB에 저장 후 반환
+            Member newMember = new Member();
+            newMember.setSub(kakaoId);
+            newMember.setEmail(email);
+            newMember = memberRepository.save(newMember); // DB 저장 후 memberId 자동 생성
+
+            return newMember;
+        }
     }
 
     private void redirectToken(HttpServletRequest request, HttpServletResponse response, Member member) throws IOException {

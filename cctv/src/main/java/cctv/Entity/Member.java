@@ -26,7 +26,7 @@ public class Member {
     private Long memberId;
 
     @Column(name = "sub")
-    private String sub;
+    private Long sub;
 
     @Column(name = "name")
     private String name;
@@ -49,7 +49,7 @@ public class Member {
         this.email = email;
     }
 
-    public Member updateUser(String name, String sub, String email, String provider) {
+    public Member updateUser(String name, Long sub, String email, String provider) {
         this.name = name;
         this.sub = sub;
         this.email = email;

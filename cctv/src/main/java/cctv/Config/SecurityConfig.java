@@ -1,6 +1,7 @@
 package cctv.Config;
 
 import cctv.Handler.OAuth2LoginSuccessHandler;
+import cctv.Repository.MemberRepository;
 import cctv.Repository.RefreshTokenRepository;
 import cctv.Service.OAuth2Service;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class SecurityConfig {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Bean
-    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
+    public SecurityFilterChain configure(HttpSecurity http, MemberRepository memberRepository) throws Exception {
         http
                 .csrf(csrf -> csrf.disable()) // csrf 보안 설정 사용 X
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안 함
@@ -40,7 +41,7 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2Service) // 로그인 성공 시 사용자 서비스 로직 설정
                         )
-                        .successHandler(new OAuth2LoginSuccessHandler(jwtTokenProvider, refreshTokenRepository)) // OAuth2 로그인 성공 후 JWT 발급
+                        .successHandler(new OAuth2LoginSuccessHandler(jwtTokenProvider, refreshTokenRepository, memberRepository)) // OAuth2 로그인 성공 후 JWT 발급
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // JWT 필터 추가
 
