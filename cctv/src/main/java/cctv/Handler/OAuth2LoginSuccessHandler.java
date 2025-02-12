@@ -42,14 +42,14 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         Long kakaoId = oAuth2User.getAttribute("id");
         String email = oAuth2User.getAttribute("email");
 
-        // ✅ DB에서 기존 회원 조회
+        //  DB에서 기존 회원 조회
         Optional<Member> existingMember = memberRepository.findBySub(kakaoId);
 
         if (existingMember.isPresent()) {
-            // ✅ 기존 회원이 있으면 DB의 memberId 사용
+            //  기존 회원이 있으면 DB의 memberId 사용
             return existingMember.get();
         } else {
-            // ✅ 신규 회원이면 DB에 저장 후 반환
+            //  신규 회원이면 DB에 저장 후 반환
             Member newMember = new Member();
             newMember.setSub(kakaoId);
             newMember.setEmail(email);
@@ -61,9 +61,17 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     private void redirectToken(HttpServletRequest request, HttpServletResponse response, Member member) throws IOException {
         String accessToken = jwtTokenProvider.generateAccessToken(member);
-        String refreshToken = jwtTokenProvider.generateRefreshToken(member); // ✅ Refresh Token은 Redis에 저장됨
+        String refreshToken = jwtTokenProvider.generateRefreshToken(member); //  Refresh Token은 Redis에 저장됨
 
-        refreshTokenRepository.save(new RefreshToken(member.getMemberId(), refreshToken, REFRESH_TOKEN_EXPIRE_TIME)); // ✅ DB에 저장
+        Optional<RefreshToken> existingToken = refreshTokenRepository.findByMemberId(member.getMemberId());
+
+        if (existingToken.isPresent()) {
+            RefreshToken refreshTokenEntity = existingToken.get();
+            refreshTokenEntity.setToken(refreshToken);
+            refreshTokenRepository.save(refreshTokenEntity); // 기존 토큰 업데이트
+        } else {
+            refreshTokenRepository.save(new RefreshToken(member.getMemberId(), refreshToken, REFRESH_TOKEN_EXPIRE_TIME)); //  새 토큰 저장
+        }
 
         String uri = createURI(accessToken, member.getMemberId(), request).toString();
         getRedirectStrategy().sendRedirect(request, response, uri);

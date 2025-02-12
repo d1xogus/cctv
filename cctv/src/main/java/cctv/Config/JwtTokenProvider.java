@@ -62,7 +62,7 @@ public class JwtTokenProvider {
         Date expiration = new Date(now.getTime() + expireTime);
 
         return Jwts.builder()
-                .setSubject(String.valueOf(memberId)) // ✅ sub에 memberId 사용
+                .setSubject(String.valueOf(memberId)) //  sub에 memberId 사용
                 .claim("email", email)
                 .setIssuedAt(now)
                 .setExpiration(expiration)
