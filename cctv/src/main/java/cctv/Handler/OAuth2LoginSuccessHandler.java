@@ -39,7 +39,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     private Member getAuthenticatedMember(Authentication authentication) {
         DefaultOAuth2User oAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
-        Long kakaoId = Long.valueOf(oAuth2User.getAttribute("id"));
+        Long kakaoId = oAuth2User.getAttribute("id");
         String email = oAuth2User.getAttribute("email");
 
         // ✅ DB에서 기존 회원 조회
