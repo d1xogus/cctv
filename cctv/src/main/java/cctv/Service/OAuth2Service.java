@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -76,17 +77,19 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
         log.info("Attempting to find user by email: {} and provider: {}, and sub: {}", userProfile.getEmail(), userProfile.getProvider(), userProfile.getSub());
         Role defaultRole = roleRepository.findById(1L)  //ID가 1인 Role 엔티티를 데이터베이스에서 조회
                 .orElseThrow(() -> new RuntimeException("Default role not found"));
-        Member member = memberRepository
-                .findUserByEmailAndProvider(userProfile.getEmail(), userProfile.getProvider())
-                .map(value -> value.updateUser(userProfile.getUsername(), userProfile.getSub(), userProfile.getEmail(), userProfile.getProvider()))
-                .orElseGet(() -> {
+        Optional<Member> existingMember = memberRepository.findBySub(userProfile.getSub());
+        Member member = existingMember.map(value -> {
+            // ✅ 기존 회원 정보 업데이트 (이름, 이메일 변경 가능)
+            value.updateUser(userProfile.getUsername(), userProfile.getSub(), userProfile.getEmail(), userProfile.getProvider());
+            return value;
+        }).orElseGet(() -> {
                     Member newMember = userProfile.toEntity();
                     newMember.setSub(userProfile.getSub());
                     newMember.setRole(defaultRole); // ✅ 기본 Role 설정
-                    return newMember;
+                    return memberRepository.save(newMember);
                 });
 
-        return memberRepository.save(member);
+        return member;
 
     }
 }

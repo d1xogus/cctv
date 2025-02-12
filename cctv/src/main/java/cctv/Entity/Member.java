@@ -44,6 +44,11 @@ public class Member {
     @Column
     private String provider;
 
+    public Member(Long memberId, String email) {
+        this.memberId = memberId;
+        this.email = email;
+    }
+
     public Member updateUser(String name, String sub, String email, String provider) {
         this.name = name;
         this.sub = sub;

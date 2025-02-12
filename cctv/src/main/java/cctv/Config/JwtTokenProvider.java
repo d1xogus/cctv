@@ -1,5 +1,6 @@
 package cctv.Config;
 
+import cctv.Entity.Member;
 import cctv.Service.OAuth2Service;
 import cctv.Service.TokenService;
 import io.jsonwebtoken.*;
@@ -31,28 +32,41 @@ public class JwtTokenProvider {
     private static final String KEY_ROLE = "roles";
     private final TokenService tokenService;
 
-    public String generateAccessToken(Authentication authentication) {
-        return generateToken(authentication, ACCESS_TOKEN_EXPIRE_TIME);
+    public String generateAccessToken(Member member) {
+        return generateToken(member.getMemberId(), member.getEmail(), ACCESS_TOKEN_EXPIRE_TIME);
     }
-
     // 1. refresh token 발급
-    public void generateRefreshToken(Authentication authentication, String accessToken) {
-        String refreshToken = generateToken(authentication, REFRESH_TOKEN_EXPIRE_TIME);
-        tokenService.saveRefreshToken(authentication.getName(), refreshToken, accessToken); // redis에 저장
+    public String generateRefreshToken(Member member) {
+        String refreshToken = generateToken(member.getMemberId(), member.getEmail(), REFRESH_TOKEN_EXPIRE_TIME);
+        tokenService.saveRefreshToken(member.getMemberId(), refreshToken, REFRESH_TOKEN_EXPIRE_TIME); // Redis에 저장
+        return refreshToken;
     }
 
-    public String generateToken(Authentication authentication, long expireTime) {
+//    public String generateToken(Authentication authentication, long expireTime) {
+//        Date now = new Date();
+//        Date expiredDate = new Date(now.getTime() + expireTime);
+//
+//        return Jwts.builder()
+//                .subject(authentication.getName())      // 사용자 정보 저장
+//                .claim(KEY_ROLE, authentication.getAuthorities().stream()
+//                        .map(GrantedAuthority::getAuthority)  // ✅ 문자열(String) 리스트로 변환
+//                        .collect(Collectors.toList()))  // ✅ JWT Claims에 List<String>으로 저장    //권한정보저장
+//                .issuedAt(now)  // 발급 시간
+//                .expiration(expiredDate)    // 만료 시간
+//                .signWith(secretKey, Jwts.SIG.HS512)    // 서명 알고리즘
+//                .compact();
+//    }
+
+    private String generateToken(Long memberId, String email, long expireTime) {
         Date now = new Date();
-        Date expiredDate = new Date(now.getTime() + expireTime);
+        Date expiration = new Date(now.getTime() + expireTime);
 
         return Jwts.builder()
-                .subject(authentication.getName())      // 사용자 정보 저장
-                .claim(KEY_ROLE, authentication.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)  // ✅ 문자열(String) 리스트로 변환
-                        .collect(Collectors.toList()))  // ✅ JWT Claims에 List<String>으로 저장    //권한정보저장
-                .issuedAt(now)  // 발급 시간
-                .expiration(expiredDate)    // 만료 시간
-                .signWith(secretKey, Jwts.SIG.HS512)    // 서명 알고리즘
+                .setSubject(String.valueOf(memberId)) // ✅ sub에 memberId 사용
+                .claim("email", email)
+                .setIssuedAt(now)
+                .setExpiration(expiration)
+                .signWith(secretKey, Jwts.SIG.HS512)
                 .compact();
     }
 
