@@ -73,15 +73,16 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             refreshTokenRepository.save(new RefreshToken(member.getMemberId(), refreshToken, REFRESH_TOKEN_EXPIRE_TIME)); //  새 토큰 저장
         }
 
-        String uri = createURI(accessToken, member.getMemberId(), request).toString();
+        String uri = createURI(accessToken, refreshToken, member.getMemberId(), request).toString();
         getRedirectStrategy().sendRedirect(request, response, uri);
     }
 
     //  프론트엔드 리다이렉트 URL 생성 (Refresh Token 제거)
-    private URI createURI(String accessToken, Long memberId, HttpServletRequest request) {
+    private URI createURI(String accessToken, String refreshToken, Long memberId, HttpServletRequest request) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("member_id", String.valueOf(memberId));
-        queryParams.add("access_token", accessToken); //  Refresh Token 제거
+        queryParams.add("access_token", accessToken);
+        queryParams.add("refresh_token", refreshToken);
 
         String redirectUri = request.getParameter("redirect_uri");
         if (redirectUri == null || redirectUri.isBlank()) {

@@ -24,12 +24,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         log.info("[JwtAuthenticationFilter] 요청 URI: {}", request.getRequestURI());
         String token = jwtTokenProvider.getTokenFromRequest(request);
 
-        if (token != null && jwtTokenProvider.validateToken(token)) {
+        if (token != null && jwtTokenProvider.validateAccessToken(token)) {
             log.info("token 인증성공");
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             log.info("[SecurityContext] 인증된 사용자: {}", authentication.getName());
             log.info("[SecurityContext] 권한 정보: {}", authentication.getAuthorities());
+        } else {
+            log.info("JWT 인증 실패 또는 Access Token이 아님");
         }
         filterChain.doFilter(request, response);
     }

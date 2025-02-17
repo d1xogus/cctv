@@ -36,31 +36,16 @@ public class JwtTokenProvider {
     private final TokenService tokenService;
 
     public String generateAccessToken(Member member) {
-        return generateToken(member.getMemberId(), member.getEmail(), ACCESS_TOKEN_EXPIRE_TIME);
+        return generateAccess(member.getMemberId(), member.getEmail(), ACCESS_TOKEN_EXPIRE_TIME);
     }
     // 1. refresh token 발급
     public String generateRefreshToken(Member member) {
-        String refreshToken = generateToken(member.getMemberId(), member.getEmail(), REFRESH_TOKEN_EXPIRE_TIME);
+        String refreshToken = generateRefresh(member.getMemberId(), member.getEmail(), REFRESH_TOKEN_EXPIRE_TIME);
         tokenService.saveRefreshToken(member.getMemberId(), refreshToken, REFRESH_TOKEN_EXPIRE_TIME); // Redis에 저장
         return refreshToken;
     }
 
-//    public String generateToken(Authentication authentication, long expireTime) {
-//        Date now = new Date();
-//        Date expiredDate = new Date(now.getTime() + expireTime);
-//
-//        return Jwts.builder()
-//                .subject(authentication.getName())      // 사용자 정보 저장
-//                .claim(KEY_ROLE, authentication.getAuthorities().stream()
-//                        .map(GrantedAuthority::getAuthority)  // ✅ 문자열(String) 리스트로 변환
-//                        .collect(Collectors.toList()))  // ✅ JWT Claims에 List<String>으로 저장    //권한정보저장
-//                .issuedAt(now)  // 발급 시간
-//                .expiration(expiredDate)    // 만료 시간
-//                .signWith(secretKey, Jwts.SIG.HS512)    // 서명 알고리즘
-//                .compact();
-//    }
-
-    private String generateToken(Long memberId, String email, long expireTime) {
+    private String generateRefresh(Long memberId, String email, long expireTime) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + expireTime);
 
@@ -82,6 +67,29 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    private String generateAccess(Long memberId, String email, long expireTime) {
+        Date now = new Date();
+        Date expiration = new Date(now.getTime() + expireTime);
+
+        Member member = memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new RuntimeException("Member not found with id: " + memberId));
+
+        // role이 null일 가능성이 있으므로 예외 처리 추가
+        List<String> roleName = Optional.ofNullable(member.getRole())
+                .map(role -> List.of(role.getName()))
+                .orElse(List.of("ROLE_USER")); // 기본값 설정
+
+        return Jwts.builder()
+                .setSubject(String.valueOf(memberId)) //  sub에 memberId 사용
+                .claim("email", email)
+                .claim("roles", roleName)
+                .claim("type", "access")
+                .setIssuedAt(now)
+                .setExpiration(expiration)
+                .signWith(secretKey, Jwts.SIG.HS512)
+                .compact();
+    }
+
     public String getTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
@@ -90,7 +98,7 @@ public class JwtTokenProvider {
         return null;
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateAccessToken(String token) {
         if (!StringUtils.hasText(token)) {
             return false;
         }
@@ -102,9 +110,40 @@ public class JwtTokenProvider {
                     .parseSignedClaims(token)
                     .getPayload();
 
+            String tokenType = claims.get("type", String.class);
+            if (!"access".equals(tokenType)) {
+                log.warn("Access Token이 아닌 토큰으로 인증을 시도함.");
+                return false; // Access Token이 아니면 거부
+            }
+
             return claims.getExpiration().after(new Date());        //만료 시간 체크
         } catch (Exception e) {
-            log.error("[validateToken] 유효하지 않은 토큰입니다.");
+            log.error("[validateToken] 유효하지 않은 Access 토큰입니다.");
+            return false;
+        }
+    }
+
+    public boolean validateRefreshToken(String token) {
+        if (!StringUtils.hasText(token)) {
+            return false;
+        }
+
+        try {
+            Claims claims = Jwts.parser()       // 0.12.x 버젼
+                    .verifyWith(secretKey)      //SecretKey 객체 사용
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+
+            String tokenType = claims.get("type", String.class);
+            if (!"refresh".equals(tokenType)) {
+                log.warn("Refresh Token이 아닌 토큰으로 Access Token을 재발급하려 함.");
+                return false; // Refresh Token이 아니면 거부
+            }
+
+            return claims.getExpiration().after(new Date());        //만료 시간 체크
+        } catch (Exception e) {
+            log.error("[validateToken] 유효하지 않은 Refresh 토큰입니다.");
             return false;
         }
     }

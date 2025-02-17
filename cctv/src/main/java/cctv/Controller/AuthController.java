@@ -26,7 +26,15 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshAccessToken(@RequestHeader("Authorization") String refreshTokenHeader) {
-        String refreshToken = refreshTokenHeader.replace("Bearer ", "");
+        if (refreshTokenHeader == null || !refreshTokenHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Refresh Token");
+        }
+
+        String refreshToken = refreshTokenHeader.substring(7);
+
+        if (!jwtTokenProvider.validateRefreshToken(refreshToken)) { // ✅ Refresh Token만 허용
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Refresh Token");
+        }
 
         // Refresh Token 검증
         RefreshToken storedToken = tokenService.getRefreshToken(refreshToken)
