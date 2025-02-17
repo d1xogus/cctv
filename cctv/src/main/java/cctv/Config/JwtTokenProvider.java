@@ -61,6 +61,7 @@ public class JwtTokenProvider {
                 .setSubject(String.valueOf(memberId)) //  sub에 memberId 사용
                 .claim("email", email)
                 .claim("roles", roleName)
+                .claim("type", "refresh")
                 .setIssuedAt(now)
                 .setExpiration(expiration)
                 .signWith(secretKey, Jwts.SIG.HS512)

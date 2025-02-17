@@ -25,20 +25,20 @@ public class AuthController {
     private final MemberRepository memberRepository;
 
     @PostMapping("/refresh")
-    public ResponseEntity<?> refreshAccessToken(@RequestHeader("Authorization") String accessHeader, @RequestHeader("Refresh_token") String refreshTokenHeader) {
+    public ResponseEntity<?> refreshAccessToken(@RequestHeader("Authorization") String accessHeader, @RequestHeader("Refresh-Token") String refreshTokenHeader) {
         if (refreshTokenHeader == null || !refreshTokenHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Refresh Token");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("null or 형식오류");
         }
 
         String refreshToken = refreshTokenHeader.substring(7);
 
         if (!jwtTokenProvider.validateRefreshToken(refreshToken)) { // ✅ Refresh Token만 허용
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Refresh Token");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh Token값 오류");
         }
 
         // Refresh Token 검증
         RefreshToken storedToken = tokenService.getRefreshToken(refreshToken)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid refresh token"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "검증 오류"));
 
         // memberId 가져오기
         Long memberId = storedToken.getMemberId();
