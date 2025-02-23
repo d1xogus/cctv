@@ -2,6 +2,7 @@ package cctv.Config;
 
 import cctv.Entity.Member;
 import cctv.Entity.Role;
+import cctv.Handler.JwtAuthenticationException;
 import cctv.Repository.MemberRepository;
 import cctv.Service.OAuth2Service;
 import cctv.Service.TokenService;
@@ -101,7 +102,7 @@ public class JwtTokenProvider {
 
     public boolean validateAccessToken(String token) {
         if (!StringUtils.hasText(token)) {
-            return false;
+            throw new JwtAuthenticationException("Access Token이 없음.");
         }
 
         try {
@@ -114,13 +115,13 @@ public class JwtTokenProvider {
             String tokenType = claims.get("type", String.class);
             if (!"access".equals(tokenType)) {
                 log.warn("Access Token이 아닌 토큰으로 인증을 시도함.");
-                return false; // Access Token이 아니면 거부
+                throw new JwtAuthenticationException("Access Token이 만료됨");
             }
 
             return claims.getExpiration().after(new Date());        //만료 시간 체크
         } catch (Exception e) {
-            log.error("[validateToken] 유효하지 않은 Access 토큰입니다.");
-            return false;
+            log.error("[validateToken] 유효하지 않은 Access 토큰.");
+            throw new JwtAuthenticationException("유효하지 않은 Access Token.");
         }
     }
 
@@ -139,13 +140,13 @@ public class JwtTokenProvider {
             String tokenType = claims.get("type", String.class);
             if (!"refresh".equals(tokenType)) {
                 log.warn("Refresh Token이 아닌 토큰으로 Access Token을 재발급하려 함.");
-                return false; // Refresh Token이 아니면 거부
+                throw new JwtAuthenticationException("Refresh Token이 아닌 토큰으로 Access Token");
             }
 
             return claims.getExpiration().after(new Date());        //만료 시간 체크
         } catch (Exception e) {
             log.error("[validateToken] 유효하지 않은 Refresh 토큰입니다.");
-            return false;
+            throw new JwtAuthenticationException("유효하지 않은 Refresh Token.");
         }
     }
 
