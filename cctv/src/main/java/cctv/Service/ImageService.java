@@ -91,7 +91,7 @@ public class ImageService {
 //            String s3Path = image.getPath(); // S3 경로
 //            DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucket, s3Path);
 //            amazonS3Client.deleteObject(deleteObjectRequest);
-            logService.make(image);
+            logService.failMake(image);
         }
         imageRepository.deleteAll(target);
     }
@@ -103,7 +103,7 @@ public class ImageService {
             throw new RuntimeException("No images found to delete");
         }
         for (Image image : target) {
-            logService.make(image);
+            logService.successMake(image);
         }
         imageRepository.deleteAll(target);
     }

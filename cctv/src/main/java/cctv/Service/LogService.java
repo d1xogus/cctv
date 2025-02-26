@@ -26,9 +26,18 @@ public class LogService {
         return logRepository.findByImage_Cctv_CctvIdIn(cctvIds);
     }
 
-    public void make(Image image) {
+    public void successMake(Image image) {
         Log log = new Log();
         log.setImage(image);
+        log.setResult("1");
+        log.setResult("Image uploaded successfully"); // 로그 결과 메시지
+        logRepository.save(log);
+    }
+
+    public void failMake(Image image) {
+        Log log = new Log();
+        log.setImage(image);
+        log.setResult("2");
         log.setResult("Image uploaded successfully"); // 로그 결과 메시지
         logRepository.save(log);
     }
