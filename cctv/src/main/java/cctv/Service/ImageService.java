@@ -107,4 +107,18 @@ public class ImageService {
         }
         imageRepository.deleteAll(target);
     }
+
+    @Transactional
+    public void delete(List<Long> imageIds) {
+        List<Image> target = imageRepository.findAllById(imageIds);
+        if (target.isEmpty()) {
+            throw new RuntimeException("No images found to delete");
+        }
+        for (Image image : target) {
+            String s3Path = image.getPath(); // S3 경로
+            DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucket, s3Path);
+            amazonS3Client.deleteObject(deleteObjectRequest);
+        }
+        imageRepository.deleteAll(target);
+    }
 }

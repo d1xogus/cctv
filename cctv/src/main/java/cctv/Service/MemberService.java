@@ -24,6 +24,7 @@ public class MemberService {
         return memberRepository.findUserByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("Member not found with email: " + email));
     }
+
     @Transactional
     public Member update(String email, MemberDTO memberDTO){
         log.info("MemberDTO 정보: {}", memberDTO);
@@ -40,5 +41,11 @@ public class MemberService {
             target.setPhone(memberDTO.getPhone());
         }
         return target;
+    }
+
+    @Transactional
+    public void delete(String email) {
+        Member target = memberRepository.findUserByEmail(email).orElseThrow(() -> new NoSuchElementException("Member not found with email: " + email));
+        memberRepository.delete(target);
     }
 }

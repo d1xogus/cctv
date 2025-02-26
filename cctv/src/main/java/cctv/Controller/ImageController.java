@@ -47,12 +47,18 @@ public class ImageController {
     @DeleteMapping("/fail")
     public ResponseEntity<String> fail(@RequestParam List<Long> imageIds) {
         imageService.fail(imageIds);
-        return ResponseEntity.ok("Images deleted successfully");
+        return ResponseEntity.ok("successfully");
     }
 
     @DeleteMapping("/success")
     public ResponseEntity<String> success(@RequestParam List<Long> imageIds) {
         imageService.success(imageIds);
+        return ResponseEntity.ok("successfully");
+    }
+
+    @DeleteMapping("/")
+    public ResponseEntity<String> delete(@RequestParam List<Long> imageIds) {
+        imageService.delete(imageIds);
         return ResponseEntity.ok("Images deleted successfully");
     }
 }

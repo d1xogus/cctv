@@ -67,5 +67,13 @@ public class MemberController {
                 ResponseEntity.status(200).body(updated) :
                 ResponseEntity.status(400).build();
     }
+
+    @DeleteMapping("/cleanguard")
+    public ResponseEntity<String> delete(@AuthenticationPrincipal OAuth2User oAuth2User){
+        String email = oAuth2User.getAttribute("email");
+        memberService.delete(email);
+        return ResponseEntity.status(200).build();
+
+    }
 }
 
