@@ -5,6 +5,7 @@ import cctv.Repository.MemberRepository;
 import cctv.Repository.RefreshTokenRepository;
 import cctv.Service.OAuth2Service;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,6 +22,7 @@ import java.util.List;
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityConfig {
 
     private final OAuth2Service oAuth2Service;
@@ -42,7 +44,10 @@ public class SecurityConfig {
                                 .userService(oAuth2Service) // 로그인 성공 시 사용자 서비스 로직 설정
                         )
                         .successHandler(new OAuth2LoginSuccessHandler(jwtTokenProvider, refreshTokenRepository, memberRepository)) // OAuth2 로그인 성공 후 JWT 발급
-                        .failureUrl("/oauth2/login/fail")
+                        .failureHandler((request, response, exception) -> { // ✅ 로그인 실패 시 오류 메시지 포함하여 리다이렉트
+                            log.error("OAuth2 로그인 실패: {}", exception.getMessage());
+                            response.sendRedirect("http://localhost:3000/login?error=" + exception.getMessage());
+                        })
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // JWT 필터 추가
 
