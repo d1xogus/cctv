@@ -42,6 +42,7 @@ public class SecurityConfig {
                                 .userService(oAuth2Service) // 로그인 성공 시 사용자 서비스 로직 설정
                         )
                         .successHandler(new OAuth2LoginSuccessHandler(jwtTokenProvider, refreshTokenRepository, memberRepository)) // OAuth2 로그인 성공 후 JWT 발급
+                        .failureUrl("/oauth2/login/fail")
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // JWT 필터 추가
 

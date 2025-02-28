@@ -8,23 +8,27 @@ import cctv.Service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 
 @RestController
-@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenService tokenService;
     private final MemberRepository memberRepository;
 
-    @PostMapping("/refresh")
+    @GetMapping("oauth2/login/fail")
+    public ResponseEntity<?> loginFailure() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
+                "message", "OAuth2 로그인 실패",
+                "error", "인증 과정에서 오류가 발생했습니다. 다시 시도해주세요."
+        ));
+    }
+
+    @PostMapping("/auth/refresh")
     public ResponseEntity<?> refreshAccessToken(@RequestHeader("Authorization") String accessHeader, @RequestHeader("Refresh-Token") String refreshTokenHeader) {
         if (refreshTokenHeader == null || !refreshTokenHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("null or 형식오류");
