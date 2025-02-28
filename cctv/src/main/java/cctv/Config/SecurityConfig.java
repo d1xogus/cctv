@@ -6,6 +6,7 @@ import cctv.Repository.RefreshTokenRepository;
 import cctv.Service.OAuth2Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,6 +29,9 @@ public class SecurityConfig {
     private final OAuth2Service oAuth2Service;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
+
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    private String kakaoClientId;
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http, MemberRepository memberRepository) throws Exception {
@@ -53,11 +57,18 @@ public class SecurityConfig {
 
                 .logout(logout -> logout // 로그아웃 설정
                         .logoutUrl("/logout") // 로그아웃 요청 URL (기본값: /logout)
-                        .logoutSuccessUrl("/") // 로그아웃 성공 후 리다이렉트 경로
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            log.info("🔹 [Spring Security 로그아웃 성공] 카카오 로그아웃으로 리다이렉트");
+
+                            String kakaoLogoutUrl = "https://kauth.kakao.com/oauth/logout?client_id=" + kakaoClientId
+                                    + "&logout_redirect_uri=http://localhost:3000/login";
+
+                            response.sendRedirect(kakaoLogoutUrl);
+                        })
                         .invalidateHttpSession(true) // 세션 무효화
-                        .deleteCookies("JSESSIONID") // JSESSIONID 쿠키 삭제
+                        .deleteCookies("JSESSIONID") // 쿠키 삭제
                         .clearAuthentication(true) // 인증 정보 삭제
-                        .permitAll() // 로그아웃 요청은 인증 없이 접근 가능
+                        .permitAll()
                 )
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 

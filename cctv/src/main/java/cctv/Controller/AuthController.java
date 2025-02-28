@@ -5,27 +5,44 @@ import cctv.Entity.Member;
 import cctv.Entity.RefreshToken;
 import cctv.Repository.MemberRepository;
 import cctv.Service.TokenService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenService tokenService;
     private final MemberRepository memberRepository;
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    private String kakaoClientId;
 
-    @GetMapping("oauth2/login/fail")
-    public ResponseEntity<?> loginFailure() {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
-                "message", "OAuth2 로그인 실패",
-                "error", "인증 과정에서 오류가 발생했습니다. 다시 시도해주세요."
-        ));
+    @GetMapping("/auth/logout")
+    public ResponseEntity<?> kakaoLogout(HttpServletRequest request, HttpServletResponse response) {
+        log.info("🔹 [카카오 로그아웃] 요청 시작");
+
+        // ✅ 카카오 로그아웃 URL
+        String kakaoLogoutUrl = "https://kauth.kakao.com/oauth/logout?client_id=" + kakaoClientId
+                + "&logout_redirect_uri=http://localhost:3000/login";
+
+        log.info("🔹 [카카오 로그아웃] URL: {}", kakaoLogoutUrl);
+
+        // ✅ Spring Security 로그아웃 처리
+        request.getSession().invalidate(); // 세션 무효화
+        SecurityContextHolder.clearContext(); // 인증 정보 삭제
+
+        return ResponseEntity.ok().body(Map.of("logoutUrl", kakaoLogoutUrl));
     }
 
     @PostMapping("/auth/refresh")
