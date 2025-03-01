@@ -38,6 +38,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         log.info("1번");
         Member member = getAuthenticatedMember(authentication);
         redirectToken(request, response, member);
+        log.info("2번");
     }
 
     private Member getAuthenticatedMember(Authentication authentication) {
@@ -93,14 +94,14 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         queryParams.add("member_id", String.valueOf(memberId));
         queryParams.add("access_token", accessToken);
         queryParams.add("refresh_token", refreshToken);
-        log.info("url오류");
+
 
 //        String redirectUri = request.getParameter("redirect_uri");
 //        if (redirectUri == null || redirectUri.isBlank()) {
 //            redirectUri = "http://localhost:3000/main"; // 기본값 설정
 //        }
-        String redirectUri = "http://3.36.174.53:8080/login";
-
+        String redirectUri = "http://3.36.174.53:8080/logininfo";
+        log.info("url생성");
         return UriComponentsBuilder.fromUriString(redirectUri)
                 .queryParams(queryParams)
                 .build()
