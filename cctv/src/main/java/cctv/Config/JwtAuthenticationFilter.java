@@ -24,7 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
         log.info("[JwtAuthenticationFilter] 요청 URI: {}", request.getRequestURI());
         if (requestURI.startsWith("/login") || requestURI.startsWith("/oauth2")) {
-            log.info("🔹 [JwtAuthenticationFilter] /login 및 /oauth2 요청은 JWT 검증 없이 처리됨.");
+            log.info(" [JwtAuthenticationFilter] /login 및 /oauth2 요청은 JWT 검증 없이 처리됨.");
             filterChain.doFilter(request, response);
             return;
         }

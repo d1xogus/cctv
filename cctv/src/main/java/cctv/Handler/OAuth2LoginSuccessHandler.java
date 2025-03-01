@@ -37,9 +37,10 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
         log.info("1번");
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         Member member = getAuthenticatedMember(authentication);
-        request.getSession().invalidate();
-        SecurityContextHolder.clearContext();
+//        request.getSession().invalidate();
+//        SecurityContextHolder.clearContext();
         redirectToken(request, response, member);
         log.info("2번");
     }
