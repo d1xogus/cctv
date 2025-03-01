@@ -5,6 +5,7 @@ import cctv.Handler.OAuth2LoginSuccessHandler;
 import cctv.Repository.MemberRepository;
 import cctv.Repository.RefreshTokenRepository;
 import cctv.Service.OAuth2Service;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,8 +56,9 @@ public class SecurityConfig {
                         .successHandler(new OAuth2LoginSuccessHandler(jwtTokenProvider, refreshTokenRepository, memberRepository)) // OAuth2 로그인 성공 후 JWT 발급
                         .failureHandler((request, response, exception) -> { //  로그인 실패 시 오류 메시지 포함하여 리다이렉트
                             log.error("OAuth2 로그인 실패: {}", exception.getMessage());
-                            String encodedError = URLEncoder.encode(exception.getMessage(), StandardCharsets.UTF_8);
-                            response.sendRedirect("http://3.36.174.53:8080/login?error=" + encodedError);
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json;charset=UTF-8");
+                            response.getWriter().write("{\"error\": \"OAuth2 authentication failed\", \"message\": \"" + exception.getMessage() + "\"}");
                         })
                 )
                 .exceptionHandling(exception -> exception
