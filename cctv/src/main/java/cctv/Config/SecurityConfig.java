@@ -18,6 +18,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @EnableWebSecurity
@@ -50,7 +52,8 @@ public class SecurityConfig {
                         .successHandler(new OAuth2LoginSuccessHandler(jwtTokenProvider, refreshTokenRepository, memberRepository)) // OAuth2 로그인 성공 후 JWT 발급
                         .failureHandler((request, response, exception) -> { // ✅ 로그인 실패 시 오류 메시지 포함하여 리다이렉트
                             log.error("OAuth2 로그인 실패: {}", exception.getMessage());
-                            response.sendRedirect("http://3.36.174.53:8080/login?error=" + exception.getMessage());
+                            String encodedError = URLEncoder.encode(exception.getMessage(), StandardCharsets.UTF_8);
+                            response.sendRedirect("http://3.36.174.53:8080/login?error=" + encodedError);
                         })
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // JWT 필터 추가

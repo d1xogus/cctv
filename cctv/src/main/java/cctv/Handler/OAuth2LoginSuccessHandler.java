@@ -35,6 +35,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
+        log.info("1번");
         Member member = getAuthenticatedMember(authentication);
         redirectToken(request, response, member);
     }
@@ -92,6 +93,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         queryParams.add("member_id", String.valueOf(memberId));
         queryParams.add("access_token", accessToken);
         queryParams.add("refresh_token", refreshToken);
+        log.info("url오류");
 
 //        String redirectUri = request.getParameter("redirect_uri");
 //        if (redirectUri == null || redirectUri.isBlank()) {
