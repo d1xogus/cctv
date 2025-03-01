@@ -52,7 +52,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         if (kakaoId == null || email == null) {
             throw new RuntimeException("OAuth2User에서 id 또는 email을 가져오지 못함.");
         }
-        log.info("🔹 [OAuth2LoginSuccessHandler] 인증된 사용자 - Kakao ID: {}, Email: {}", kakaoId, email);
+        log.info(" [OAuth2LoginSuccessHandler] 인증된 사용자 - Kakao ID: {}, Email: {}", kakaoId, email);
 
 
         //  DB에서 기존 회원 조회
