@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import java.net.URI;
@@ -37,6 +38,8 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
                                         Authentication authentication) throws IOException, ServletException {
         log.info("1번");
         Member member = getAuthenticatedMember(authentication);
+        request.getSession().invalidate();
+        SecurityContextHolder.clearContext();
         redirectToken(request, response, member);
         log.info("2번");
     }
@@ -85,9 +88,6 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         }
 
         String uri = createURI(accessToken, refreshToken, member.getMemberId(), request).toString();
-        response.setHeader("Cache-Control", "no-store");
-        response.setHeader("Pragma", "no-cache");
-        response.setHeader("Expires", "0");
         getRedirectStrategy().sendRedirect(request, response, uri);
     }
 
