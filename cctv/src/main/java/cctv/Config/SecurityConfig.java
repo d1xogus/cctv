@@ -47,6 +47,7 @@ public class SecurityConfig {
                         .requestMatchers("/cctv/**").authenticated()
                         .anyRequest().authenticated() // 다른 모든 요청에 인증 필요a
                 )
+                .formLogin(form -> form.disable())
                 .oauth2Login(oauth2 -> oauth2 // OAuth2를 통한 로그인 사용
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2Service) // 로그인 성공 시 사용자 서비스 로직 설정
