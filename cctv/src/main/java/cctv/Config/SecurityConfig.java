@@ -1,5 +1,6 @@
 package cctv.Config;
 
+import cctv.Handler.CustomAuthenticationEntryPoint;
 import cctv.Handler.OAuth2LoginSuccessHandler;
 import cctv.Repository.MemberRepository;
 import cctv.Repository.RefreshTokenRepository;
@@ -31,6 +32,7 @@ public class SecurityConfig {
     private final OAuth2Service oAuth2Service;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String kakaoClientId;
@@ -55,6 +57,9 @@ public class SecurityConfig {
                             String encodedError = URLEncoder.encode(exception.getMessage(), StandardCharsets.UTF_8);
                             response.sendRedirect("http://3.36.174.53:8080/login?error=" + encodedError);
                         })
+                )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(customAuthenticationEntryPoint) //  401 반환 설정
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // JWT 필터 추가
 
