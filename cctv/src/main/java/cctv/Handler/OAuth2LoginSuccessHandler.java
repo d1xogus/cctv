@@ -85,6 +85,9 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         }
 
         String uri = createURI(accessToken, refreshToken, member.getMemberId(), request).toString();
+        response.setHeader("Cache-Control", "no-store");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Expires", "0");
         getRedirectStrategy().sendRedirect(request, response, uri);
     }
 
