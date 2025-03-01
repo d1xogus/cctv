@@ -99,11 +99,11 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         queryParams.add("refresh_token", refreshToken);
 
 
-//        String redirectUri = request.getParameter("redirect_uri");
-//        if (redirectUri == null || redirectUri.isBlank()) {
-//            redirectUri = "http://localhost:3000/main"; // 기본값 설정
-//        }
-        String redirectUri = "http://3.36.174.53:8080/logininfo";
+        String redirectUri = request.getParameter("redirect_uri");
+        if (redirectUri == null || redirectUri.isBlank()) {
+            redirectUri = "http://localhost:3000/main"; // 기본값 설정
+        }
+//        String redirectUri = "http://3.36.174.53:8080/logininfo";
         log.info("url생성");
         return UriComponentsBuilder.fromUriString(redirectUri)
                 .queryParams(queryParams)
