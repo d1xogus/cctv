@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // csrf 보안 설정 사용 X
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안 함
                 .authorizeHttpRequests(auth -> auth // 요청에 인증 절차 필요
-                        .requestMatchers("/","/main", "/oauth2/**", "/login").permitAll()// 루트 경로는 인증 절차 생략
+                        .requestMatchers("/","/main", "/oauth2/**", "/login/**").permitAll()// 루트 경로는 인증 절차 생략
                         .requestMatchers("/cctv/**").authenticated()
                         .anyRequest().authenticated() // 다른 모든 요청에 인증 필요a
                 )
@@ -50,7 +50,7 @@ public class SecurityConfig {
                         .successHandler(new OAuth2LoginSuccessHandler(jwtTokenProvider, refreshTokenRepository, memberRepository)) // OAuth2 로그인 성공 후 JWT 발급
                         .failureHandler((request, response, exception) -> { // ✅ 로그인 실패 시 오류 메시지 포함하여 리다이렉트
                             log.error("OAuth2 로그인 실패: {}", exception.getMessage());
-                            response.sendRedirect("http://localhost:3000/login?error=" + exception.getMessage());
+                            response.sendRedirect("http://3.36.174.53:8080/login?error=" + exception.getMessage());
                         })
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // JWT 필터 추가
