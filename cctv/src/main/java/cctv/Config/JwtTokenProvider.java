@@ -115,10 +115,15 @@ public class JwtTokenProvider {
             String tokenType = claims.get("type", String.class);
             if (!"access".equals(tokenType)) {
                 log.warn("Access Token이 아닌 토큰으로 인증을 시도함.");
-                throw new JwtAuthenticationException("Access Token이 만료됨");
+                throw new JwtAuthenticationException("Access Token이 아님");
             }
 
-            return claims.getExpiration().after(new Date());        //만료 시간 체크
+            if (claims.getExpiration().before(new Date())) {
+                log.warn("Access Token이 만료됨.");
+                throw new JwtAuthenticationException("Access Token이 만료되었습니다.");
+            }
+            return true;
+            //만료 시간 체크
         } catch (Exception e) {
             log.error("[validateToken] 유효하지 않은 Access 토큰.");
             throw new JwtAuthenticationException("유효하지 않은 Access Token.");
