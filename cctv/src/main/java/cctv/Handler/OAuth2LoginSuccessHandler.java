@@ -9,6 +9,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 @RequiredArgsConstructor
+@Slf4j
 public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -42,11 +44,18 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         Long kakaoId = oAuth2User.getAttribute("id");
         String email = oAuth2User.getAttribute("email");
 
+        if (kakaoId == null || email == null) {
+            throw new RuntimeException("OAuth2User에서 id 또는 email을 가져오지 못함.");
+        }
+        log.info("🔹 [OAuth2LoginSuccessHandler] 인증된 사용자 - Kakao ID: {}, Email: {}", kakaoId, email);
+
+
         //  DB에서 기존 회원 조회
         Optional<Member> existingMember = memberRepository.findBySub(kakaoId);
 
         if (existingMember.isPresent()) {
             //  기존 회원이 있으면 DB의 memberId 사용
+            log.info("✅ [기존 회원] DB에서 조회된 회원 ID: {}", existingMember.get().getMemberId());
             return existingMember.get();
         } else {
             //  신규 회원이면 DB에 저장 후 반환
