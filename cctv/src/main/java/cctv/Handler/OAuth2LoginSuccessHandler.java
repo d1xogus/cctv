@@ -56,7 +56,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
         if (existingMember.isPresent()) {
             //  기존 회원이 있으면 DB의 memberId 사용
-            log.info("✅ [기존 회원] DB에서 조회된 회원 ID: {}", existingMember.get().getMemberId());
+            log.info(" [기존 회원] DB에서 조회된 회원 ID: {}", existingMember.get().getMemberId());
             return existingMember.get();
         } else {
             //  신규 회원이면 DB에 저장 후 반환
@@ -99,7 +99,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 //        if (redirectUri == null || redirectUri.isBlank()) {
 //            redirectUri = "http://localhost:3000/main"; // 기본값 설정
 //        }
-        String redirectUri = "http://3.36.174.53:8080/login/oauth2/code/kakao";
+        String redirectUri = "http://3.36.174.53:8080/login";
 
         return UriComponentsBuilder.fromUriString(redirectUri)
                 .queryParams(queryParams)
