@@ -84,10 +84,11 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         queryParams.add("access_token", accessToken);
         queryParams.add("refresh_token", refreshToken);
 
-        String redirectUri = request.getParameter("redirect_uri");
-        if (redirectUri == null || redirectUri.isBlank()) {
-            redirectUri = "http://localhost:3000/main"; // 기본값 설정
-        }
+//        String redirectUri = request.getParameter("redirect_uri");
+//        if (redirectUri == null || redirectUri.isBlank()) {
+//            redirectUri = "http://localhost:3000/main"; // 기본값 설정
+//        }
+        String redirectUri = "/oauth2/authorization/kakao";
 
         return UriComponentsBuilder.fromUriString(redirectUri)
                 .queryParams(queryParams)
