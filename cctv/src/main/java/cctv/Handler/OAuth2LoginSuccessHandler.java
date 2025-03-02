@@ -88,13 +88,9 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             refreshTokenRepository.save(new RefreshToken(member.getMemberId(), refreshToken, REFRESH_TOKEN_EXPIRE_TIME)); //  새 토큰 저장
         }
         log.info("[OAuth2LoginSuccessHandler] JWT 생성 완료 - AccessToken: {}", accessToken);
-//        String uri = createURI(accessToken, refreshToken, member.getMemberId(), request).toString();
-//        getRedirectStrategy().sendRedirect(request, response, uri);
+        String uri = createURI(accessToken, refreshToken, member.getMemberId(), request).toString();
+        getRedirectStrategy().sendRedirect(request, response, uri);
 
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write("{\"access_token\": \"" + accessToken + "\", \"refresh_token\": \"" + refreshToken + "\"}");
-
-        log.info("[OAuth2LoginSuccessHandler] JWT 응답 완료");
     }
 
     //  프론트엔드 리다이렉트 URL 생성 (Refresh Token 제거)
@@ -105,11 +101,12 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         queryParams.add("refresh_token", refreshToken);
 
 
-        String redirectUri = request.getParameter("redirect_uri");
-        if (redirectUri == null || redirectUri.isBlank()) {
-            redirectUri = "http://localhost:3000/main"; // 기본값 설정
-        }
-//        String redirectUri = "http://3.36.174.53:8080/logininfo";
+        String redirectUri = "http://localhost:3000/main";
+//        String redirectUri = request.getParameter("redirect_uri");
+//        if (redirectUri == null || redirectUri.isBlank()) {
+//            redirectUri = "http://localhost:3000/main"; // 기본값 설정
+//        }
+
         log.info("url생성");
         return UriComponentsBuilder.fromUriString(redirectUri)
                 .queryParams(queryParams)
