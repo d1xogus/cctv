@@ -42,7 +42,10 @@ public class SecurityConfig {
     public SecurityFilterChain configure(HttpSecurity http, MemberRepository memberRepository) throws Exception {
         http
                 .csrf(csrf -> csrf.disable()) // csrf 보안 설정 사용 X
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안 함
+               //.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안 함
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) //  STATELESS에서 변경
+                )
                 .authorizeHttpRequests(auth -> auth // 요청에 인증 절차 필요
                         .requestMatchers("/","/main", "/login", "/oauth2/**", "/login/**", "/favicon.ico").permitAll()// 루트 경로는 인증 절차 생략
                         .requestMatchers("/login/oauth2/code/**").permitAll()
