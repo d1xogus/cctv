@@ -47,7 +47,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth/refresh")
-    public ResponseEntity<?> refreshAccessToken(@RequestHeader("Authorization") String accessHeader, @RequestHeader("Refresh-Token") String refreshTokenHeader) {
+    public ResponseEntity<?> refreshAccessToken(@RequestHeader("Refresh-Token") String refreshTokenHeader) {
         if (refreshTokenHeader == null || !refreshTokenHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("null or 형식오류");
         }
