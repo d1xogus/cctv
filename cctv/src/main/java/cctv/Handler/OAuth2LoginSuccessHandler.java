@@ -87,7 +87,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         } else {
             refreshTokenRepository.save(new RefreshToken(member.getMemberId(), refreshToken, REFRESH_TOKEN_EXPIRE_TIME)); //  새 토큰 저장
         }
-
+        log.info("[OAuth2LoginSuccessHandler] JWT 생성 완료 - AccessToken: {}", accessToken);
 //        String uri = createURI(accessToken, refreshToken, member.getMemberId(), request).toString();
 //        getRedirectStrategy().sendRedirect(request, response, uri);
 
