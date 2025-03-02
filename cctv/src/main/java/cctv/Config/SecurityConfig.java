@@ -65,6 +65,9 @@ public class SecurityConfig {
                             response.getWriter().write("{\"error\": \"OAuth2 authentication failed\", \"message\": \"" + exception.getMessage() + "\"}");
                         })
                 )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(customAuthenticationEntryPoint) //  401 반환 설정
+                )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // JWT 필터 추가
 
                 .logout(logout -> logout // 로그아웃 설정
