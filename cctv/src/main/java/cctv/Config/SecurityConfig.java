@@ -73,7 +73,7 @@ public class SecurityConfig {
                 .logout(logout -> logout // 로그아웃 설정
                         .logoutUrl("/logout") // 로그아웃 요청 URL (기본값: /logout)
                         .logoutSuccessHandler((request, response, authentication) -> {
-                            log.info("🔹 [Spring Security 로그아웃 성공] 카카오 로그아웃으로 리다이렉트");
+                            log.info(" [Spring Security 로그아웃 성공] 카카오 로그아웃으로 리다이렉트");
 
                             String kakaoLogoutUrl = "https://kauth.kakao.com/oauth/logout?client_id=" + kakaoClientId
                                     + "&logout_redirect_uri=http://localhost:3000/login";

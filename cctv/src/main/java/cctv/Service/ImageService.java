@@ -1,10 +1,8 @@
 package cctv.Service;
 
 import cctv.DTO.ImageUploadDTO;
-import cctv.Entity.Image;
-import cctv.Entity.Log;
-import cctv.Entity.Member;
-import cctv.Entity.Role;
+import cctv.Entity.*;
+import cctv.Repository.CctvRepository;
 import cctv.Repository.ImageRepository;
 import cctv.Repository.LogRepository;
 import cctv.Repository.RoleRepository;
@@ -32,6 +30,7 @@ public class ImageService {
     private final AmazonS3Client amazonS3Client;
     private final ImageRepository imageRepository;
     private final RoleRepository roleRepository;
+    private final CctvRepository cctvRepository;
     private final LogService logService;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -42,7 +41,7 @@ public class ImageService {
         List<String> resultList = new ArrayList<>();
 
         for(MultipartFile multipartFile : imageUploadDTO.getImages()) {
-            String value = upload(multipartFile, imageUploadDTO.getTimestamp());
+            String value = upload(multipartFile, imageUploadDTO.getTimestamp(), imageUploadDTO.getCctv());
             resultList.add(value);
         }
         log.info("resultList:",resultList);
@@ -50,7 +49,7 @@ public class ImageService {
     }
 
     @Transactional
-    public String upload(MultipartFile multipartFile, String timestamp){
+    public String upload(MultipartFile multipartFile, String timestamp, Long cctv){
         String name = multipartFile.getOriginalFilename();
         Image image = new Image(name);
 
@@ -62,8 +61,11 @@ public class ImageService {
             amazonS3Client.putObject(bucket, name, multipartFile.getInputStream(), objectMetadata);
 
             String path = amazonS3Client.getUrl(bucket, name).toString();
+            Cctv cctvId = cctvRepository.findByCctvId(cctv);
+
             image.setPath(path);
             image.setTime(timestamp);
+            image.setCctv(cctvId);
         } catch(IOException e) {
             log.error("Error uploading file: {}", e.getMessage());
             throw new RuntimeException("File upload failed", e);

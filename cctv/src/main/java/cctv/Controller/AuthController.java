@@ -32,14 +32,14 @@ public class AuthController {
     public ResponseEntity<?> kakaoLogout(HttpServletRequest request, HttpServletResponse response) {
         log.info("🔹 [카카오 로그아웃] 요청 시작");
 
-        // ✅ 카카오 로그아웃 URL
+        //  카카오 로그아웃 URL
         String kakaoLogoutUrl = "https://kauth.kakao.com/oauth/logout?client_id=" + kakaoClientId
                 + "&logout_redirect_uri=\t\n" +
                 "http://3.36.174.53:8080/logout";
 
         log.info("🔹 [카카오 로그아웃] URL: {}", kakaoLogoutUrl);
 
-        // ✅ Spring Security 로그아웃 처리
+        //  Spring Security 로그아웃 처리
         request.getSession().invalidate(); // 세션 무효화
         SecurityContextHolder.clearContext(); // 인증 정보 삭제
 
@@ -54,7 +54,7 @@ public class AuthController {
 
         String refreshToken = refreshTokenHeader.substring(7);
 
-        if (!jwtTokenProvider.validateRefreshToken(refreshToken)) { // ✅ Refresh Token만 허용
+        if (!jwtTokenProvider.validateRefreshToken(refreshToken)) { //  Refresh Token만 허용
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh Token값 오류");
         }
 
