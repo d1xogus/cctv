@@ -33,6 +33,7 @@ public class LogService {
     }
 
     public void failMake(Image image) {
+        log.info("삭제실행");
         Log log = Log.fromImage(image, "0");
         logRepository.save(log);
     }
