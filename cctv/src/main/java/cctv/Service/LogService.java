@@ -24,7 +24,7 @@ public class LogService {
     public List<Log> get(String roleName){
         Role role = roleRepository.findByRoleName(roleName);
         List<Long> cctvIds = role.getCctvId();
-        return logRepository.findByImage_Cctv_CctvIdIn(cctvIds);
+        return logRepository.findByCctv_CctvIdIn(cctvIds);
     }
 
     public void successMake(Image image) {
