@@ -95,7 +95,7 @@ public class ImageService {
 //            amazonS3Client.deleteObject(deleteObjectRequest);
             logService.failMake(image);
         }
-        logService.nullifyImage(imageIds);
+
         imageRepository.deleteAll(target);
     }
 

@@ -19,18 +19,34 @@ public class Log {
     @Column(name = "logId")
     private Long logId;
 
-    @OneToOne
-    @JoinColumn(name = "imageId")
-    private Image image;
+    @Column(name = "imageId")
+    private Long imageId;
+
+    @Column(name = "name")
+    private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "cctvId")
+    private Cctv cctv;
+
+    @Column(name = "path")  // S3 내부 이미지에 접근할 수 있는 URL
+    private String path;
+
+    @Column(name = "time")
+    private String time;
 
     @Column(name = "result")
     private String result;
 
-    public static Log toEntity(LogDTO logDTO, Image image) {
+    public static Log fromImage(Image image, String result) {
         return Log.builder()
-                .logId(logDTO.getLogId())
-                .image(image) // 이미지를 직접 매핑
-                .result(logDTO.getResult())
+                .imageId(image.getImageId())
+                .name(image.getName())
+                .cctv(image.getCctv())
+                .path(image.getPath())
+                .time(image.getTime())
+                .result(result)
                 .build();
     }
+
 }

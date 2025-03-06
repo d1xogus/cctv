@@ -28,19 +28,12 @@ public class LogService {
     }
 
     public void successMake(Image image) {
-        Log log = new Log();
-        log.setImage(image);
-
-        log.setResult("1");
-        log.setResult("Image uploaded successfully"); // 로그 결과 메시지
+        Log log = Log.fromImage(image, "1");
         logRepository.save(log);
     }
 
     public void failMake(Image image) {
-        Log log = new Log();
-        log.setImage(image);
-        log.setResult("0");
-        log.setResult("Image uploaded successfully"); // 로그 결과 메시지
+        Log log = Log.fromImage(image, "0");
         logRepository.save(log);
     }
 
@@ -62,11 +55,4 @@ public class LogService {
         return ResponseEntity.ok(updatedLog);
     }
 
-    @Transactional
-    public void nullifyImage(List<Long> imageIds) {
-        List<Log> logs = logRepository.findByImage_ImageIdIn(imageIds);
-        for (Log log : logs) {
-            log.setImage(null); // 외래 키를 NULL로 변경
-        }
-    }
 }
