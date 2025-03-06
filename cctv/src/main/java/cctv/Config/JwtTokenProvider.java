@@ -31,7 +31,7 @@ public class JwtTokenProvider {
     private static final String SECRET_KEY = "your-very-secure-and-longer-secret-key-your-very-secure-and-longer-secret-key"; // 64바이트 이상
     private static final SecretKey secretKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     private final MemberRepository memberRepository;
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 1L;
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30L;
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L * 24 * 7;
     private static final String KEY_ROLE = "roles";
     private final TokenService tokenService;
