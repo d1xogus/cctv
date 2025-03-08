@@ -108,7 +108,7 @@ public class ImageService {
         for (Image image : target) {
             logService.successMake(image);
         }
-        imageRepository.deleteAll(target);
+//        imageRepository.deleteAll(target);
     }
 
     @Transactional

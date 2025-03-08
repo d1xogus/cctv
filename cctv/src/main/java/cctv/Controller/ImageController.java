@@ -50,7 +50,7 @@ public class ImageController {
         return ResponseEntity.ok("successfully");
     }
 
-    @DeleteMapping("/success")
+    @PostMapping("/success")
     public ResponseEntity<String> success(@RequestParam List<Long> imageIds) {
         imageService.success(imageIds);
         return ResponseEntity.ok("successfully");
