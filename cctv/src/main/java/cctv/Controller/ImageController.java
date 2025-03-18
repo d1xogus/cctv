@@ -1,5 +1,6 @@
 package cctv.Controller;
 
+import cctv.DTO.ImageDTO;
 import cctv.DTO.ImageUploadDTO;
 import cctv.Entity.Image;
 import cctv.Service.ImageService;
@@ -42,7 +43,7 @@ public class ImageController {
     }
 
     @GetMapping("/{roleName}")
-    public List<Image> image(@PathVariable String roleName) {
+    public List<ImageDTO> image(@PathVariable String roleName) {
         return imageService.get(roleName);
     }
 
@@ -54,7 +55,7 @@ public class ImageController {
         new Thread(() -> {
             try {
                 while (true) {  //  지속적으로 데이터 전송
-                    List<Image> images = imageService.get(roleName);
+                    List<ImageDTO> images = imageService.get(roleName);
                     emitter.send(SseEmitter.event().data(images));
                     Thread.sleep(5000); //  5초마다 전송
                 }
