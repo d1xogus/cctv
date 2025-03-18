@@ -1,17 +1,17 @@
 package cctv.Service;
 
 import cctv.DTO.ImageUploadDTO;
+import cctv.DTO.ImageDTO;
 import cctv.Entity.*;
 import cctv.Repository.CctvRepository;
 import cctv.Repository.ImageRepository;
-import cctv.Repository.LogRepository;
 import cctv.Repository.RoleRepository;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,8 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -77,10 +75,15 @@ public class ImageService {
         return image.getPath();
     }
 
-    public List<Image> get(String roleName){
+    @Transactional(readOnly = true)     //단순한 조회(READ) 작업이 수행될 때 사용, Lazy Loading이 필요한 경우
+    public List<ImageDTO> get(String roleName){
         Role role = roleRepository.findByRoleName(roleName);
-        List<Long> cctvIds = role.getCctvId();
-        return imageRepository.findByCctv_CctvIdIn(cctvIds);
+        //List<Long> cctvIds = role.getCctvId();
+        List<Long> cctvIds = new ArrayList<>(role.getCctvId());
+        return imageRepository.findByCctv_CctvIdIn(cctvIds)
+                .stream()
+                .map(ImageDTO::new) // DTO 변환
+                .collect(Collectors.toList());
     }
 
     @Transactional
