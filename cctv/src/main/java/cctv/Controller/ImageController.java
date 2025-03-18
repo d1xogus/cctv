@@ -9,7 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -42,6 +44,26 @@ public class ImageController {
     @GetMapping("/{roleName}")
     public List<Image> image(@PathVariable String roleName) {
         return imageService.get(roleName);
+    }
+
+
+    @GetMapping("/sse/{roleName}")  // 기존 경로 유지
+    public SseEmitter stream(@PathVariable String roleName) {
+        SseEmitter emitter = new SseEmitter();
+
+        new Thread(() -> {
+            try {
+                while (true) {  //  지속적으로 데이터 전송
+                    List<Image> images = imageService.get(roleName);
+                    emitter.send(SseEmitter.event().data(images));
+                    Thread.sleep(5000); //  5초마다 전송
+                }
+            } catch (IOException | InterruptedException e) {
+                emitter.completeWithError(e);
+            }
+        }).start();
+
+        return emitter;
     }
 
     @DeleteMapping("/fail")
