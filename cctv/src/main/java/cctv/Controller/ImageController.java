@@ -14,6 +14,8 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @RestController
@@ -50,19 +52,39 @@ public class ImageController {
 
     @GetMapping("/sse/{roleName}")  // 기존 경로 유지
     public SseEmitter stream(@PathVariable String roleName) {
-        SseEmitter emitter = new SseEmitter();
-
-        new Thread(() -> {
+        SseEmitter emitter = new SseEmitter(10 * 60 * 300L); // 3분(30,000ms) 타임아웃 설정
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
             try {
-                while (true) {  //  지속적으로 데이터 전송
+                while (!Thread.currentThread().isInterrupted()) {  //  지속적으로 데이터 전송
                     List<ImageDTO> images = imageService.get(roleName);
-                    emitter.send(SseEmitter.event().data(images));
-                    Thread.sleep(5000); //  5초마다 전송
+
+                    try {
+                        emitter.send(SseEmitter.event().data(images));
+                    } catch (IOException e) {
+                        System.out.println("클라이언트 연결이 끊어졌습니다: " + e.getMessage());
+                        break; // 루프 중단 후 안전하게 종료
+                    }
+
+                    Thread.sleep(5000); // 5초마다 데이터 전송
                 }
-            } catch (IOException | InterruptedException e) {
-                emitter.completeWithError(e);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // 인터럽트 상태 유지
+            } finally {
+                emitter.complete();
             }
-        }).start();
+        });
+
+        emitter.onCompletion(() -> {
+            System.out.println("SSE 연결 종료: " + roleName);
+            executor.shutdown();
+        });
+
+        emitter.onTimeout(() -> {
+            System.out.println("SSE 타임아웃 발생: " + roleName);
+            executor.shutdown();
+            emitter.complete();
+        });
 
         return emitter;
     }
