@@ -16,7 +16,7 @@ public class ImageDTO {
 
     private String name;
 
-    private Long cctvId;
+    private CctvDTO cctv;
 
     private String path;
 
@@ -28,7 +28,8 @@ public class ImageDTO {
         this.name = image.getName();
         this.path = image.getPath();
         this.time = image.getTime();
-        this.cctvId = image.getCctv().getCctvId(); //  LazyInitializationException 방지
+        this.cctv = new CctvDTO(image.getCctv().getCctvId(), image.getCctv().getLocation(), image.getCctv().getCctvDate(), image.getCctv().getCctvName()
+                , image.getCctv().getWebcamId()); //  LazyInitializationException 방지
     }
 
 }
