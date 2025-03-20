@@ -18,5 +18,5 @@ public class ImageUploadDTO {
     private List<MultipartFile> images = new ArrayList<>(); // 다중 파일
     private MultipartFile image;                            // 단일 파일
     private String timestamp;                               // 추가 데이터(시간)
-    private Long cctv;
+    private Long cctvId;
 }
