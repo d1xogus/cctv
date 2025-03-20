@@ -39,7 +39,7 @@ public class ImageService {
         List<String> resultList = new ArrayList<>();
 
         for(MultipartFile multipartFile : imageUploadDTO.getImages()) {
-            String value = upload(multipartFile, imageUploadDTO.getTimestamp(), imageUploadDTO.getCctv());
+            String value = upload(multipartFile, imageUploadDTO.getTimestamp(), imageUploadDTO.getCctvId());
             resultList.add(value);
         }
         log.info("resultList:",resultList);
