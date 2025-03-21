@@ -9,4 +9,5 @@ import java.util.List;
 public interface LogRepository extends JpaRepository<Log, Long> {
     List<Log> findByLogIdIn(List<Long> imageIds);
     List<Log> findByCctv_CctvIdIn(List<Long> cctvIds);
+    boolean existsByImageId(Long imageId);
 }

@@ -28,6 +28,14 @@ public class LogService {
     }
 
     public void successMake(Image image) {
+        Long imageId = image.getImageId();
+
+        // 로그가 이미 존재하면 저장하지 않음
+        if (logRepository.existsByImageId(imageId)) {
+            log.info("이미 로그가 존재하는 imageId입니다: {}", imageId);
+            return;
+        }
+
         Log log = Log.fromImage(image, "1");
         logRepository.save(log);
     }
