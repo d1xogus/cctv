@@ -38,12 +38,13 @@ public class ImageService {
     public List<String> uploadImage(ImageUploadDTO imageUploadDTO) {
         List<String> resultList = new ArrayList<>();
         log.info("DTO: {}", imageUploadDTO);
+        log.info("업로드할 파일 수: {}", imageUploadDTO.getImages().size());
         for(MultipartFile multipartFile : imageUploadDTO.getImages()) {
             log.info("파일이름: {}", multipartFile.getOriginalFilename());
             String value = upload(multipartFile, imageUploadDTO.getTimestamp(), imageUploadDTO.getCctvId());
             resultList.add(value);
         }
-        log.info("resultList:",resultList);
+        log.info("resultList: {}",resultList);
         return resultList;
     }
 
