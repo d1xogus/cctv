@@ -39,6 +39,7 @@ public class ImageService {
         List<String> resultList = new ArrayList<>();
 
         for(MultipartFile multipartFile : imageUploadDTO.getImages()) {
+            log.info("파일이름: {}", multipartFile.getOriginalFilename());
             String value = upload(multipartFile, imageUploadDTO.getTimestamp(), imageUploadDTO.getCctvId());
             resultList.add(value);
         }

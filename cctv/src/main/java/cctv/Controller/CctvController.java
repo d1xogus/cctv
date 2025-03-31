@@ -50,7 +50,7 @@ public class CctvController {
                         break;
                     }
 
-                    Thread.sleep(5000); // 5초마다 전송
+                    Thread.sleep(6000); // 6초마다 전송
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
