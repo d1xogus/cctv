@@ -55,7 +55,17 @@ public class ImageService {
 
         try {
             ObjectMetadata objectMetadata = new ObjectMetadata();
-            objectMetadata.setContentType(multipartFile.getContentType());
+            String contentType = multipartFile.getContentType();
+            if (contentType == null || contentType.equals("application/octet-stream")) {
+                if (name != null && name.endsWith(".mp4")) {
+                    contentType = "video/mp4";
+                } else if (name != null && name.endsWith(".jpg")) {
+                    contentType = "image/jpeg";
+                } else if (name != null && name.endsWith(".png")) {
+                    contentType = "image/png";
+                }
+            }
+            objectMetadata.setContentType(contentType);
             objectMetadata.setContentLength(multipartFile.getInputStream().available());
 
             amazonS3Client.putObject(bucket, name, multipartFile.getInputStream(), objectMetadata);

@@ -33,7 +33,7 @@ public class CctvController {
         return cctvService.getAll();
     }
 
-    @GetMapping("/sse/cctv")
+    @GetMapping("/sse")
     public SseEmitter streamCctv() {
         SseEmitter emitter = new SseEmitter(10 * 60 * 300L); // 약 3분 타임아웃
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -42,7 +42,6 @@ public class CctvController {
             try {
                 while (!Thread.currentThread().isInterrupted()) {
                     List<Cctv> cctvs = cctvService.getAll();
-
                     try {
                         emitter.send(SseEmitter.event().data(cctvs));
                     } catch (IOException e) {
