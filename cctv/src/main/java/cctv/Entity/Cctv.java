@@ -33,6 +33,9 @@ public class Cctv {
     @Column(name = "webcamId")
     private String webcamId;
 
+    @Column(name = "stream")
+    private String stream;
+
     public static Cctv toEntity(CctvDTO cctvDTO) {
         return Cctv.builder()
                 .cctvId(cctvDTO.getCctvId())
@@ -40,6 +43,7 @@ public class Cctv {
                 .cctvDate(cctvDTO.getCctvDate())
                 .cctvName(cctvDTO.getCctvName())
                 .webcamId(cctvDTO.getWebcamId())
+                .stream(cctvDTO.getStream())
                 .build();
     }
 }

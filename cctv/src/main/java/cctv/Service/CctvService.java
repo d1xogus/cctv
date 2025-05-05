@@ -54,6 +54,9 @@ public class CctvService {
         if (cctvDTO.getWebcamId() != null){
             cctv.setWebcamId(cctvDTO.getWebcamId());
         }
+        if (cctvDTO.getStream() != null){
+            cctv.setStream(cctvDTO.getStream());
+        }
         Cctv updatedCctv = cctvRepository.save(cctv);
         return ResponseEntity.ok(updatedCctv);
     }

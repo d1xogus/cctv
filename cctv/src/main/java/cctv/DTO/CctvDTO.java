@@ -16,6 +16,7 @@ public class CctvDTO {
     private String cctvDate;
     private String cctvName;
     private String webcamId;
+    private String stream;
 
     public static CctvDTO toDTO(Cctv cctv) {
         return CctvDTO.builder()
@@ -24,6 +25,7 @@ public class CctvDTO {
                 .cctvDate(cctv.getCctvDate())
                 .cctvName(cctv.getCctvName())
                 .webcamId(cctv.getWebcamId())
+                .stream(cctv.getStream())
                 .build();
     }
 }

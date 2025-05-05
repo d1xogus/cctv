@@ -63,6 +63,12 @@ dependencies {
 
 	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	//kvs
+//	implementation 'software.amazon.awssdk:kinesisvideo:2.25.22'
+//	implementation 'software.amazon.awssdk:kinesis-video-signaling:2.25.22'
+//	implementation 'software.amazon.awssdk:kinesisvideo:2.20.145'
+//	implementation 'software.amazon.awssdk:kinesis-video-signaling:2.20.145'
 }
 
 test{
