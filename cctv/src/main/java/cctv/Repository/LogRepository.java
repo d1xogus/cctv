@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface LogRepository extends JpaRepository<Log, Long> {
     List<Log> findByLogIdIn(List<Long> imageIds);
-    List<Log> findByCctv_CctvIdIn(List<Long> cctvIds);
+    List<Log> findByCctv_StreamIn(List<String> stream);
     boolean existsByImageId(Long imageId);
 }

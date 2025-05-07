@@ -28,7 +28,7 @@ public class ImageDTO {
         this.name = image.getName();
         this.path = image.getPath();
         this.time = image.getTime();
-        this.cctv = new CctvDTO(image.getCctv().getCctvId(), image.getCctv().getLocation(), image.getCctv().getCctvDate(), image.getCctv().getCctvName()
+        this.cctv = new CctvDTO(image.getCctv().getLocation(), image.getCctv().getCctvDate(), image.getCctv().getCctvName()
                 , image.getCctv().getWebcamId(), image.getCctv().getStream()); //  LazyInitializationException 방지
     }
 

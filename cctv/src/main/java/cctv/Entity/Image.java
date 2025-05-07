@@ -24,7 +24,7 @@ public class Image {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "cctvId")
+    @JoinColumn(name = "stream")
     private Cctv cctv;
 
     @Column(name = "path")  // S3 내부 이미지에 접근할 수 있는 URL

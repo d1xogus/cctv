@@ -27,15 +27,15 @@ public class Role {
     private String roleName;
 
     @ElementCollection
-    @CollectionTable(name = "role_cctvids", joinColumns = @JoinColumn(name = "roleId"))
-    @Column(name = "cctvId")
-    private List<Long> cctvId;
+    @CollectionTable(name = "role_stream", joinColumns = @JoinColumn(name = "roleId"))
+    @Column(name = "stream")
+    private List<String> stream;
 
     public static Role toEntity(RoleDTO roleDTO) {
         return Role.builder()
                 .roleId(roleDTO.getRoleId())
                 .roleName(roleDTO.getRoleName())
-                .cctvId(roleDTO.getCctvId())
+                .stream(roleDTO.getStream())
                 .build();
     }
 

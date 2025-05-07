@@ -35,6 +35,11 @@ public class RoleController {
         return roleService.update(roleId, roleDTO);
     }
 
+    @PostMapping("/{roleId}")
+    public ResponseEntity<Role> stream(@PathVariable Long roleId, @RequestBody RoleDTO roleDTO){
+        return roleService.update(roleId, roleDTO);
+    }
+
     @DeleteMapping("/")
     public ResponseEntity<String> delete(@RequestParam Long roleId) {
         Role target = roleService.delete(roleId);

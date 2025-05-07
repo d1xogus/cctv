@@ -31,8 +31,8 @@ public class LogController {
     }
 
     @DeleteMapping("/")
-    public ResponseEntity<String> delete(@RequestParam List<Long> cctvIds) {
-        logService.delete(cctvIds);
+    public ResponseEntity<String> delete(@RequestParam List<Long> logIds) {
+        logService.delete(logIds);
         return ResponseEntity.status(200).body("success");
     }
 }

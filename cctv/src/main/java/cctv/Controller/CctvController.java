@@ -77,14 +77,14 @@ public class CctvController {
         return cctvService.make(cctvDTO);
     }
 
-    @PatchMapping("/{cctvId}")
-    public ResponseEntity<Cctv> update(@PathVariable Long cctvId, @RequestBody CctvDTO cctvDTO){
-        return cctvService.update(cctvId, cctvDTO);
+    @PatchMapping("/{stream}")
+    public ResponseEntity<Cctv> update(@PathVariable String stream, @RequestBody CctvDTO cctvDTO){
+        return cctvService.update(stream, cctvDTO);
     }
 
-    @DeleteMapping("/{cctvId}")
-    public ResponseEntity<String> delete(@PathVariable Long cctvId) {
-        Cctv target = cctvService.delete(cctvId);
+    @DeleteMapping("/{stream}")
+    public ResponseEntity<String> delete(@PathVariable String stream) {
+        Cctv target = cctvService.delete(stream);
         return (target != null) ?
                 ResponseEntity.status(200).body("success") :
                 ResponseEntity.status(404).build();

@@ -17,9 +17,8 @@ import org.hibernate.annotations.DynamicUpdate;
 @Setter
 public class Cctv {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cctvId")
-    private Long cctvId;
+    @Column(name = "stream", nullable = false, unique = true)
+    private String stream;
 
     @Column(name = "location")
     private String location;
@@ -33,12 +32,10 @@ public class Cctv {
     @Column(name = "webcamId")
     private String webcamId;
 
-    @Column(name = "stream")
-    private String stream;
+
 
     public static Cctv toEntity(CctvDTO cctvDTO) {
         return Cctv.builder()
-                .cctvId(cctvDTO.getCctvId())
                 .location(cctvDTO.getLocation())
                 .cctvDate(cctvDTO.getCctvDate())
                 .cctvName(cctvDTO.getCctvName())

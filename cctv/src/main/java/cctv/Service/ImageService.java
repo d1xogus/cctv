@@ -41,7 +41,7 @@ public class ImageService {
         log.info("업로드할 파일 수: {}", imageUploadDTO.getImages().size());
         for(MultipartFile multipartFile : imageUploadDTO.getImages()) {
             log.info("파일이름: {}", multipartFile.getOriginalFilename());
-            String value = upload(multipartFile, imageUploadDTO.getTimestamp(), imageUploadDTO.getCctvId());
+            String value = upload(multipartFile, imageUploadDTO.getTimestamp(), imageUploadDTO.getStream());
             resultList.add(value);
         }
         log.info("resultList: {}",resultList);
@@ -49,7 +49,7 @@ public class ImageService {
     }
 
     @Transactional
-    public String upload(MultipartFile multipartFile, String timestamp, Long cctv){
+    public String upload(MultipartFile multipartFile, String timestamp, String cctv){
         String name = multipartFile.getOriginalFilename();
         Image image = new Image(name);
 
@@ -71,11 +71,11 @@ public class ImageService {
             amazonS3Client.putObject(bucket, name, multipartFile.getInputStream(), objectMetadata);
 
             String path = amazonS3Client.getUrl(bucket, name).toString();
-            Cctv cctvId = cctvRepository.findByCctvId(cctv);
+            Cctv stream = cctvRepository.findByStream(cctv);
 
             image.setPath(path);
             image.setTime(timestamp);
-            image.setCctv(cctvId);
+            image.setCctv(stream);
         } catch(IOException e) {
             log.error("Error uploading file: {}", e.getMessage());
             throw new RuntimeException("File upload failed", e);
@@ -91,8 +91,8 @@ public class ImageService {
     public List<ImageDTO> get(String roleName){
         Role role = roleRepository.findByRoleName(roleName);
         //List<Long> cctvIds = role.getCctvId();
-        List<Long> cctvIds = new ArrayList<>(role.getCctvId());
-        return imageRepository.findByCctv_CctvIdIn(cctvIds)
+        List<String> streams = new ArrayList<>(role.getStream());
+        return imageRepository.findByCctv_StreamIn(streams)
                 .stream()
                 .map(ImageDTO::new) // DTO 변환
                 .collect(Collectors.toList());

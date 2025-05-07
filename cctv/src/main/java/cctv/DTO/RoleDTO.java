@@ -14,13 +14,13 @@ import java.util.List;
 public class RoleDTO {
     private Long roleId;
     private String roleName;
-    private List<Long> cctvId;
+    private List<String> stream;
 
     public static RoleDTO toDTO(Role role) {
         return RoleDTO.builder()
                 .roleId(role.getRoleId())
                 .roleName(role.getRoleName())
-                .cctvId(role.getCctvId())
+                .stream(role.getStream())
                 .build();
     }
 }

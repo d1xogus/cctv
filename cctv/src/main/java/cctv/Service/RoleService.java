@@ -10,8 +10,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -38,9 +42,30 @@ public class RoleService {
         if (roleDTO.getRoleName() != null) {
             role.setRoleName(roleDTO.getRoleName());
         }
-        if (roleDTO.getCctvId() != null){
-            role.setCctvId(roleDTO.getCctvId());
+        if (roleDTO.getStream() != null){
+            role.setStream(roleDTO.getStream());
         }
+        Role updatedRole = roleRepository.save(role);
+        return ResponseEntity.ok(updatedRole);
+    }
+
+    @Transactional
+    public ResponseEntity<Role> stream(Long roleId, RoleDTO roleDTO) {
+        // 기존 Role 조회
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        // 기존 스트림 목록 가져오기
+        List<String> currentStreams = new ArrayList<>(role.getStream());
+
+        // 새로운 스트림 추가 (중복 방지)
+        if (roleDTO.getStream() != null) {
+            Set<String> updatedStreams = new HashSet<>(currentStreams);
+            updatedStreams.addAll(roleDTO.getStream());
+            role.setStream(new ArrayList<>(updatedStreams));
+        }
+
+        // 변경된 Role 저장
         Role updatedRole = roleRepository.save(role);
         return ResponseEntity.ok(updatedRole);
     }

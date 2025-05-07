@@ -28,9 +28,9 @@ public class CctvService {
 
     public List<Cctv> get(String roleName){
         Role role = roleRepository.findByRoleName(roleName);
-        List<Long> cctvIds = role.getCctvId();
+        List<String> streams = role.getStream();
 
-        return cctvRepository.findByCctvIdIn(cctvIds);
+        return cctvRepository.findByStreamIn(streams);
     }
 
     public CctvDTO make(CctvDTO cctvDTO){
@@ -39,8 +39,8 @@ public class CctvService {
         return CctvDTO.toDTO(savedCctv);
     }
 
-    public ResponseEntity<Cctv> update(Long cctvId, CctvDTO cctvDTO) {
-        Cctv cctv = cctvRepository.findById(cctvId).orElseThrow(() -> new RuntimeException("Log not found"));
+    public ResponseEntity<Cctv> update(String stream, CctvDTO cctvDTO) {
+        Cctv cctv = cctvRepository.findById(stream).orElseThrow(() -> new RuntimeException("Log not found"));
         // DTO의 정보를 사용해 로그 업데이트
         if (cctvDTO.getCctvName() != null) {
             cctv.setCctvName(cctvDTO.getCctvName());
@@ -61,8 +61,8 @@ public class CctvService {
         return ResponseEntity.ok(updatedCctv);
     }
 
-    public Cctv delete(Long cctvId) {
-        Cctv deleted = cctvRepository.findByCctvId(cctvId);
+    public Cctv delete(String stream) {
+        Cctv deleted = cctvRepository.findByStream(stream);
         cctvRepository.delete(deleted);
         return deleted;
     }

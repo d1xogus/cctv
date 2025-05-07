@@ -23,8 +23,8 @@ public class LogService {
 
     public List<Log> get(String roleName){
         Role role = roleRepository.findByRoleName(roleName);
-        List<Long> cctvIds = role.getCctvId();
-        return logRepository.findByCctv_CctvIdIn(cctvIds);
+        List<String> streams = role.getStream();
+        return logRepository.findByCctv_StreamIn(streams);
     }
 
     public void successMake(Image image) {
