@@ -4,7 +4,9 @@ package cctv.Service;
 import cctv.DTO.LogDTO;
 import cctv.DTO.RoleDTO;
 import cctv.Entity.Cctv;
+import cctv.Entity.Member;
 import cctv.Entity.Role;
+import cctv.Repository.MemberRepository;
 import cctv.Repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,27 +14,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class RoleService {
     private final RoleRepository roleRepository;
+    private final MemberRepository memberRepository;
 
     public List<Role> get(){
         return roleRepository.findAll();
     }
 
-    public RoleDTO make(RoleDTO roleDTO) {
+    public RoleDTO make(RoleDTO roleDTO, String email) {
         //DTO를 엔터티로 변환
         Role role = Role.toEntity(roleDTO);
         // 엔터티를 데이터베이스에 저장
         Role savedRole = roleRepository.save(role);
         //저장된 엔터티를 DTO로 변환하여 반환
+        Member target = memberRepository.findUserByEmail(email).orElseThrow(() -> new NoSuchElementException("Member not found with email: " + email));
+        target.setRole(role);
         return RoleDTO.toDTO(savedRole);
     }
 

@@ -9,6 +9,8 @@ import cctv.Service.RoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,8 +28,9 @@ public class RoleController {
     }
 
     @PostMapping
-    public RoleDTO make(@RequestBody RoleDTO roleDTO){ // modelattribute로 받은 데이터와 roleDTO를 매핑
-        return roleService.make(roleDTO);
+    public RoleDTO make(@AuthenticationPrincipal OAuth2User oAuth2User, @RequestBody RoleDTO roleDTO){ // modelattribute로 받은 데이터와 roleDTO를 매핑
+        String email = oAuth2User.getAttribute("email");
+        return roleService.make(roleDTO, email);
     }
 
     @PatchMapping("/{roleId}")
