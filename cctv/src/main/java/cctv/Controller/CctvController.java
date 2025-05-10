@@ -23,9 +23,9 @@ import java.util.concurrent.Executors;
 public class CctvController {
     private final CctvService cctvService;
 
-    @GetMapping("/{roleName}")
-    public List<Cctv> get(@PathVariable String roleName){
-        return cctvService.get(roleName);
+    @GetMapping("/{roleId}")
+    public List<Cctv> get(@PathVariable Long roleId){
+        return cctvService.get(roleId);
     }
 
     @GetMapping("/")

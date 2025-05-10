@@ -21,8 +21,8 @@ public class LogService {
     private final LogRepository logRepository;
     private final RoleRepository roleRepository;
 
-    public List<Log> get(String roleName){
-        Role role = roleRepository.findByRoleName(roleName);
+    public List<Log> get(Long roleId){
+        Role role = roleRepository.findByRoleId(roleId);
         List<String> streams = role.getStream();
         return logRepository.findByCctv_StreamIn(streams);
     }

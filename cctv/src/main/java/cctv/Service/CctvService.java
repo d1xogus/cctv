@@ -30,8 +30,8 @@ public class CctvService {
     private final ImageRepository imageRepository;
     private final LogRepository logRepository;
 
-    public List<Cctv> get(String roleName){
-        Role role = roleRepository.findByRoleName(roleName);
+    public List<Cctv> get(Long roleId){
+        Role role = roleRepository.findByRoleId(roleId);
         List<String> streams = role.getStream();
 
         return cctvRepository.findByStreamIn(streams);

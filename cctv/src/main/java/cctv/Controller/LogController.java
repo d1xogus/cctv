@@ -20,9 +20,9 @@ import java.util.List;
 public class LogController {
     private final LogService logService;
 
-    @GetMapping("/{roleName}")
-    public List<Log> log(@PathVariable String roleName){
-        return logService.get(roleName);
+    @GetMapping("/{roleId}")
+    public List<Log> log(@PathVariable Long roleId){
+        return logService.get(roleId);
     }
 
     @PatchMapping("/{logId}")

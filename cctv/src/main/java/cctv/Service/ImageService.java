@@ -88,8 +88,8 @@ public class ImageService {
     }
 
     @Transactional(readOnly = true)     //단순한 조회(READ) 작업이 수행될 때 사용, Lazy Loading이 필요한 경우
-    public List<ImageDTO> get(String roleName){
-        Role role = roleRepository.findByRoleName(roleName);
+    public List<ImageDTO> get(Long roleId){
+        Role role = roleRepository.findByRoleId(roleId);
         //List<Long> cctvIds = role.getCctvId();
         List<String> streams = new ArrayList<>(role.getStream());
         return imageRepository.findByCctv_StreamIn(streams)

@@ -44,20 +44,20 @@ public class ImageController {
         return imageService.uploadImage(imageUploadDTO);
     }
 
-    @GetMapping("/{roleName}")
-    public List<ImageDTO> image(@PathVariable String roleName) {
-        return imageService.get(roleName);
+    @GetMapping("/{roleId}")
+    public List<ImageDTO> image(@PathVariable Long roleId) {
+        return imageService.get(roleId);
     }
 
 
-    @GetMapping("/sse/{roleName}")  // 기존 경로 유지
-    public SseEmitter stream(@PathVariable String roleName) {
+    @GetMapping("/sse/{roleId}")  // 기존 경로 유지
+    public SseEmitter stream(@PathVariable Long roleId) {
         SseEmitter emitter = new SseEmitter(10 * 60 * 300L); // 3분(30,000ms) 타임아웃 설정
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             try {
                 while (!Thread.currentThread().isInterrupted()) {  //  지속적으로 데이터 전송
-                    List<ImageDTO> images = imageService.get(roleName);
+                    List<ImageDTO> images = imageService.get(roleId);
 
                     try {
                         emitter.send(SseEmitter.event().data(images));
@@ -76,12 +76,12 @@ public class ImageController {
         });
 
         emitter.onCompletion(() -> {
-            System.out.println("SSE 연결 종료: " + roleName);
+            System.out.println("SSE 연결 종료: " + roleId);
             executor.shutdown();
         });
 
         emitter.onTimeout(() -> {
-            System.out.println("SSE 타임아웃 발생: " + roleName);
+            System.out.println("SSE 타임아웃 발생: " + roleId);
             executor.shutdown();
             emitter.complete();
         });
