@@ -27,6 +27,7 @@ public class RoleService {
         return roleRepository.findAll();
     }
 
+    @Transactional
     public RoleDTO make(RoleDTO roleDTO, String email) {
         //DTO를 엔터티로 변환
         Role role = Role.toEntity(roleDTO);
