@@ -20,12 +20,12 @@ import java.util.List;
 public class RoleController {
     private final RoleService roleService;
 
-    @GetMapping("/")
+    @GetMapping
     public List<Role> get(){
         return roleService.get();
     }
 
-    @PostMapping("/")
+    @PostMapping
     public RoleDTO make(@RequestBody RoleDTO roleDTO){ // modelattribute로 받은 데이터와 roleDTO를 매핑
         return roleService.make(roleDTO);
     }
@@ -40,7 +40,7 @@ public class RoleController {
         return roleService.update(roleId, roleDTO);
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping
     public ResponseEntity<String> delete(@RequestParam Long roleId) {
         Role target = roleService.delete(roleId);
         return (target != null) ?

@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ImageRepository extends JpaRepository<Image, Long> {
     List<Image> findByCctv_StreamIn(List<String> stream);
+    List<Image> findByCctv_StreamIn(String stream);
+
 }

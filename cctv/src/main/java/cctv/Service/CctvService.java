@@ -4,9 +4,11 @@ package cctv.Service;
 import cctv.DTO.CctvDTO;
 import cctv.DTO.LogDTO;
 import cctv.Entity.Cctv;
+import cctv.Entity.Image;
 import cctv.Entity.Log;
 import cctv.Entity.Role;
 import cctv.Repository.CctvRepository;
+import cctv.Repository.ImageRepository;
 import cctv.Repository.LogRepository;
 import cctv.Repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,8 @@ import java.util.stream.Collectors;
 public class CctvService {
     private final CctvRepository cctvRepository;
     private final RoleRepository roleRepository;
+    private final ImageRepository imageRepository;
+    private final LogRepository logRepository;
 
     public List<Cctv> get(String roleName){
         Role role = roleRepository.findByRoleName(roleName);
@@ -63,6 +67,7 @@ public class CctvService {
 
     public Cctv delete(String stream) {
         Cctv deleted = cctvRepository.findByStream(stream);
+        //List<Image> deleteImage = imageRepository.findByCctv_StreamIn(stream);
         cctvRepository.delete(deleted);
         return deleted;
     }
