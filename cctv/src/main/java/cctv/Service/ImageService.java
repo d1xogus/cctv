@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -129,6 +130,20 @@ public class ImageService {
     @Transactional
     public void delete(List<Long> imageIds) {
         List<Image> target = imageRepository.findAllById(imageIds);
+        if (target.isEmpty()) {
+            throw new RuntimeException("No images found to delete");
+        }
+        for (Image image : target) {
+            String s3Path = image.getPath(); // S3 경로
+            DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucket, s3Path);
+            amazonS3Client.deleteObject(deleteObjectRequest);
+        }
+        imageRepository.deleteAll(target);
+    }
+
+    @Transactional
+    public void deleteCctv(String stream) {
+        List<Image> target = imageRepository.findByCctv_StreamIn(Collections.singletonList(stream));
         if (target.isEmpty()) {
             throw new RuntimeException("No images found to delete");
         }

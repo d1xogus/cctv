@@ -5,6 +5,7 @@ import cctv.DTO.LogDTO;
 import cctv.Entity.Cctv;
 
 import cctv.Service.CctvService;
+import cctv.Service.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import java.util.concurrent.Executors;
 @RequestMapping("/cleanguard/cctv")
 public class CctvController {
     private final CctvService cctvService;
+    private final ImageService imageService;
 
     @GetMapping("/{roleId}")
     public List<Cctv> get(@PathVariable Long roleId){
@@ -84,6 +86,7 @@ public class CctvController {
 
     @DeleteMapping("/{stream}")
     public ResponseEntity<String> delete(@PathVariable String stream) {
+        imageService.deleteCctv(stream);
         Cctv target = cctvService.delete(stream);
         return (target != null) ?
                 ResponseEntity.status(200).body("success") :
