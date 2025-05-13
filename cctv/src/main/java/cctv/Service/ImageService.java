@@ -144,9 +144,6 @@ public class ImageService {
     @Transactional
     public void deleteCctv(String stream) {
         List<Image> target = imageRepository.findByCctv_StreamIn(Collections.singletonList(stream));
-        if (target.isEmpty()) {
-            throw new RuntimeException("No images found to delete");
-        }
         for (Image image : target) {
             String s3Path = image.getPath(); // S3 경로
             DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucket, s3Path);
