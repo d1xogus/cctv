@@ -32,6 +32,14 @@ public class Cctv {
     @Column(name = "webcamId")
     private String webcamId;
 
+    @Column(name ="ip")
+    private String ip;
+
+    @Column(name = "id")
+    private String id;
+
+    @Column(name = "passwd")
+    private String passwd;
 
 
     public static Cctv toEntity(CctvDTO cctvDTO) {
@@ -41,6 +49,9 @@ public class Cctv {
                 .cctvName(cctvDTO.getCctvName())
                 .webcamId(cctvDTO.getWebcamId())
                 .stream(cctvDTO.getStream())
+                .ip(cctvDTO.getIp())
+                .id(cctvDTO.getId())
+                .passwd(cctvDTO.getPasswd())
                 .build();
     }
 }

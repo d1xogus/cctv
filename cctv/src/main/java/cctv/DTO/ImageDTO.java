@@ -29,7 +29,7 @@ public class ImageDTO {
         this.path = image.getPath();
         this.time = image.getTime();
         this.cctv = new CctvDTO(image.getCctv().getLocation(), image.getCctv().getCctvDate(), image.getCctv().getCctvName()
-                , image.getCctv().getWebcamId(), image.getCctv().getStream()); //  LazyInitializationException 방지
+                , image.getCctv().getWebcamId(), image.getCctv().getStream(), image.getCctv().getIp(), image.getCctv().getId(), image.getCctv().getPasswd()); //  LazyInitializationException 방지
     }
 
 }

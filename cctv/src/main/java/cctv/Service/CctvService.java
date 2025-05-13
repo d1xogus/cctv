@@ -27,8 +27,6 @@ import java.util.stream.Collectors;
 public class CctvService {
     private final CctvRepository cctvRepository;
     private final RoleRepository roleRepository;
-    private final ImageRepository imageRepository;
-    private final LogRepository logRepository;
 
     public List<Cctv> get(Long roleId){
         Role role = roleRepository.findByRoleId(roleId);
