@@ -35,4 +35,6 @@ public class LogController {
         logService.delete(logIds);
         return ResponseEntity.status(200).body("success");
     }
+
+
 }

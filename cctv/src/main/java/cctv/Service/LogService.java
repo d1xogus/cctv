@@ -6,12 +6,14 @@ import cctv.Entity.Log;
 import cctv.Entity.Role;
 import cctv.Repository.LogRepository;
 import cctv.Repository.RoleRepository;
-import jakarta.transaction.Transactional;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -51,6 +53,12 @@ public class LogService {
         if (target.isEmpty()) {
             throw new RuntimeException("No images found to delete");
         }
+        logRepository.deleteAll(target);
+    }
+
+    @Transactional
+    public void deleteCctv(String stream) {
+        List<Log> target = logRepository.findByCctv_StreamIn(Collections.singletonList(stream));
         logRepository.deleteAll(target);
     }
 
