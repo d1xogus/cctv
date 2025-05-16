@@ -23,13 +23,20 @@ public class LogService {
     private final LogRepository logRepository;
     private final RoleRepository roleRepository;
 
-    public List<Log> get(Long roleId){
+    public List<Log> getSelect(Long roleId){
         Role role = roleRepository.findByRoleId(roleId);
-        List<String> streams = role.getStream();
+        List<String> streams = role.getTotalStream();
         return logRepository.findByCctv_StreamIn(streams);
     }
 
-    public void successMake(Image image) {
+    public List<Log> getTotal(Long roleId) {
+        Role role = roleRepository.findByRoleId(roleId);
+        List<String> streams = role.getSelectStream();
+        return logRepository.findByCctv_StreamIn(streams);
+    }
+
+
+        public void successMake(Image image) {
         Long imageId = image.getImageId();
 
         // 로그가 이미 존재하면 저장하지 않음

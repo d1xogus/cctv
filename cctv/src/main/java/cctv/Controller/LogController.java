@@ -22,7 +22,7 @@ public class LogController {
 
     @GetMapping("/{roleId}")
     public List<Log> log(@PathVariable Long roleId){
-        return logService.get(roleId);
+        return logService.getSelect(roleId);
     }
 
     @PatchMapping("/{logId}")

@@ -92,7 +92,7 @@ public class ImageService {
     public List<ImageDTO> get(Long roleId){
         Role role = roleRepository.findByRoleId(roleId);
         //List<Long> cctvIds = role.getCctvId();
-        List<String> streams = new ArrayList<>(role.getStream());
+        List<String> streams = new ArrayList<>(role.getSelectStream());
         return imageRepository.findByCctv_StreamIn(streams)
                 .stream()
                 .map(ImageDTO::new) // DTO 변환

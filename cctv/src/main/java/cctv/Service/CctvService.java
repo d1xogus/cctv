@@ -28,9 +28,17 @@ public class CctvService {
     private final CctvRepository cctvRepository;
     private final RoleRepository roleRepository;
 
-    public List<Cctv> get(Long roleId){
+    public List<Cctv> getSelect(Long roleId){
         Role role = roleRepository.findByRoleId(roleId);
-        List<String> streams = role.getStream();
+        List<String> streams = role.getSelectStream();
+
+        return cctvRepository.findByStreamIn(streams);
+    }
+
+
+    public List<Cctv> getTotal(Long roleId){
+        Role role = roleRepository.findByRoleId(roleId);
+        List<String> streams = role.getTotalStream();
 
         return cctvRepository.findByStreamIn(streams);
     }

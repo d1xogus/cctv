@@ -28,8 +28,8 @@ public class CctvController {
     private final LogService logService;
 
     @GetMapping("/{roleId}")
-    public List<Cctv> get(@PathVariable Long roleId){
-        return cctvService.get(roleId);
+    public List<Cctv> getSelect(@PathVariable Long roleId){
+        return cctvService.getSelect(roleId);
     }
 
     @GetMapping("/")
