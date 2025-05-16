@@ -14,13 +14,16 @@ import java.util.List;
 public class RoleDTO {
     private Long roleId;
     private String roleName;
-    private List<String> stream;
+    private List<String> selectStream;
+    private List<String> totalStream;
+
 
     public static RoleDTO toDTO(Role role) {
         return RoleDTO.builder()
                 .roleId(role.getRoleId())
                 .roleName(role.getRoleName())
-                .stream(role.getStream())
+                .selectStream(role.getSelectStream())
+                .totalStream(role.getTotalStream())
                 .build();
     }
 }

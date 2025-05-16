@@ -29,13 +29,19 @@ public class Role {
     @ElementCollection
     @CollectionTable(name = "role_stream", joinColumns = @JoinColumn(name = "roleId"))
     @Column(name = "stream")
-    private List<String> stream;
+    private List<String> selectStream;
+
+    @ElementCollection
+    @CollectionTable(name = "role_stream", joinColumns = @JoinColumn(name = "roleId"))
+    @Column(name = "stream")
+    private List<String> totalStream;
 
     public static Role toEntity(RoleDTO roleDTO) {
         return Role.builder()
                 .roleId(roleDTO.getRoleId())
                 .roleName(roleDTO.getRoleName())
-                .stream(roleDTO.getStream())
+                .selectStream(roleDTO.getSelectStream())
+                .totalStream(roleDTO.getTotalStream())
                 .build();
     }
 

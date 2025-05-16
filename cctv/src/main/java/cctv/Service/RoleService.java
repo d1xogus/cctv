@@ -45,8 +45,11 @@ public class RoleService {
         if (roleDTO.getRoleName() != null) {
             role.setRoleName(roleDTO.getRoleName());
         }
-        if (roleDTO.getStream() != null){
-            role.setStream(roleDTO.getStream());
+        if (roleDTO.getSelectStream() != null){
+            role.setSelectStream(roleDTO.getSelectStream());
+        }
+        if (roleDTO.getTotalStream() != null){
+            role.setTotalStream(roleDTO.getTotalStream());
         }
         Role updatedRole = roleRepository.save(role);
         return ResponseEntity.ok(updatedRole);
@@ -59,13 +62,13 @@ public class RoleService {
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
         // 기존 스트림 목록 가져오기
-        List<String> currentStreams = new ArrayList<>(role.getStream());
+        List<String> currentStreams = new ArrayList<>(role.getTotalStream());
 
         // 새로운 스트림 추가 (중복 방지)
-        if (roleDTO.getStream() != null) {
+        if (roleDTO.getTotalStream() != null) {
             Set<String> updatedStreams = new HashSet<>(currentStreams);
-            updatedStreams.addAll(roleDTO.getStream());
-            role.setStream(new ArrayList<>(updatedStreams));
+            updatedStreams.addAll(roleDTO.getTotalStream());
+            role.setTotalStream(new ArrayList<>(updatedStreams));
         }
 
         // 변경된 Role 저장
