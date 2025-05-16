@@ -27,13 +27,13 @@ public class Role {
     private String roleName;
 
     @ElementCollection
-    @CollectionTable(name = "role_stream", joinColumns = @JoinColumn(name = "roleId"))
-    @Column(name = "stream")
+    @CollectionTable(name = "select_select", joinColumns = @JoinColumn(name = "roleId"))
+    @Column(name = "selectStream")
     private List<String> selectStream;
 
     @ElementCollection
-    @CollectionTable(name = "role_stream", joinColumns = @JoinColumn(name = "roleId"))
-    @Column(name = "stream")
+    @CollectionTable(name = "total_stream", joinColumns = @JoinColumn(name = "roleId"))
+    @Column(name = "totalStream")
     private List<String> totalStream;
 
     public static Role toEntity(RoleDTO roleDTO) {
