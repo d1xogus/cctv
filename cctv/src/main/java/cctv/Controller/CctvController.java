@@ -27,9 +27,14 @@ public class CctvController {
     private final ImageService imageService;
     private final LogService logService;
 
-    @GetMapping("/{roleId}")
+    @GetMapping("/select/{roleId}")
     public List<Cctv> getSelect(@PathVariable Long roleId){
         return cctvService.getSelect(roleId);
+    }
+
+    @GetMapping("/total/{roleId}")
+    public List<Cctv> getTotal(@PathVariable Long roleId){
+        return cctvService.getTotal(roleId);
     }
 
     @GetMapping("/")
