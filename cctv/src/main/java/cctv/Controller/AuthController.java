@@ -30,14 +30,14 @@ public class AuthController {
 
     @GetMapping("/auth/logout")
     public ResponseEntity<?> kakaoLogout(HttpServletRequest request, HttpServletResponse response) {
-        log.info("🔹 [카카오 로그아웃] 요청 시작");
+        log.info(" [카카오 로그아웃] 요청 시작");
 
         //  카카오 로그아웃 URL
         String kakaoLogoutUrl = "https://kauth.kakao.com/oauth/logout?client_id=" + kakaoClientId
-                + "&logout_redirect_uri=\t\n" +
+                + "&logout_redirect_uri=" +
                 "http://3.36.174.53:8080/logout";
 
-        log.info("🔹 [카카오 로그아웃] URL: {}", kakaoLogoutUrl);
+        log.info(" [카카오 로그아웃] URL: {}", kakaoLogoutUrl);
 
         //  Spring Security 로그아웃 처리
         request.getSession().invalidate(); // 세션 무효화
