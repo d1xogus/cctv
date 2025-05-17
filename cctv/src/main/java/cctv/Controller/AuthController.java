@@ -28,36 +28,36 @@ public class AuthController {
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String kakaoClientId;
 
-//    @GetMapping("/auth/logout")
-//    public ResponseEntity<?> kakaoLogout(HttpServletRequest request, HttpServletResponse response) {
-//        log.info(" [카카오 로그아웃] 요청 시작");
-//
-//        //  카카오 로그아웃 URL
-//        String kakaoLogoutUrl = "https://kauth.kakao.com/oauth/logout?client_id=" + kakaoClientId
-//                + "&logout_redirect_uri=" +
-//                "http://3.36.174.53:8080/logout";
-//
-//        log.info(" [카카오 로그아웃] URL: {}", kakaoLogoutUrl);
-//
-//        //  Spring Security 로그아웃 처리
-//        request.getSession().invalidate(); // 세션 무효화
-//        SecurityContextHolder.clearContext(); // 인증 정보 삭제
-//
-//        return ResponseEntity.ok().body(Map.of("logoutUrl", kakaoLogoutUrl));
-//    }
-
-    @GetMapping("/auth/logout")
-    public String kakaoLogoutRedirect(HttpServletRequest request) {
+    @GetMapping("/logout")
+    public ResponseEntity<?> kakaoLogout(HttpServletRequest request, HttpServletResponse response) {
         log.info(" [카카오 로그아웃] 요청 시작");
 
+        //  카카오 로그아웃 URL
+        String kakaoLogoutUrl = "https://kauth.kakao.com/oauth/logout?client_id=" + kakaoClientId
+                + "&logout_redirect_uri=" +
+                "http://3.36.174.53:8080/logout";
+
+        log.info(" [카카오 로그아웃] URL: {}", kakaoLogoutUrl);
+
+        //  Spring Security 로그아웃 처리
         request.getSession().invalidate(); // 세션 무효화
         SecurityContextHolder.clearContext(); // 인증 정보 삭제
 
-        String kakaoLogoutUrl = "https://kauth.kakao.com/oauth/logout?client_id=" + kakaoClientId
-                + "&logout_redirect_uri=http://3.36.174.53:8080/logout";
-
-        return "redirect:" + kakaoLogoutUrl;
+        return ResponseEntity.ok().body(Map.of("logoutUrl", kakaoLogoutUrl));
     }
+
+//    @GetMapping("/auth/logout")
+//    public String kakaoLogoutRedirect(HttpServletRequest request) {
+//        log.info(" [카카오 로그아웃] 요청 시작");
+//
+//        request.getSession().invalidate(); // 세션 무효화
+//        SecurityContextHolder.clearContext(); // 인증 정보 삭제
+//
+//        String kakaoLogoutUrl = "https://kauth.kakao.com/oauth/logout?client_id=" + kakaoClientId
+//                + "&logout_redirect_uri=http://3.36.174.53:8080/logout";
+//
+//        return "redirect:" + kakaoLogoutUrl;
+//    }
 
     @PostMapping("/auth/refresh")
     public ResponseEntity<?> refreshAccessToken(@RequestHeader("Refresh-Token") String refreshTokenHeader) {

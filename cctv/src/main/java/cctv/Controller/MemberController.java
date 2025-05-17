@@ -38,12 +38,12 @@ public class MemberController {
         return attributes.toString();
     }
 
-    @GetMapping("/cleanguard/logout")
-    public String logoutKakao() {
-        String logoutRedirectUri = "/";
-
-        return "redirect:https://kauth.kakao.com/oauth/logout?client_id=" + clientId + "&logout_redirect_uri=" + logoutRedirectUri;
-    }
+//    @GetMapping("/cleanguard/logout")
+//    public String logoutKakao() {
+//        String logoutRedirectUri = "/";
+//
+//        return "redirect:https://kauth.kakao.com/oauth/logout?client_id=" + clientId + "&logout_redirect_uri=" + logoutRedirectUri;
+//    }
 
     @GetMapping("/cleanguard")
     public Member get(@AuthenticationPrincipal OAuth2User oAuth2User){

@@ -47,7 +47,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) //  STATELESS에서 변경
                 )
                 .authorizeHttpRequests(auth -> auth // 요청에 인증 절차 필요
-                        .requestMatchers("/","/main", "/login", "/oauth2/**", "/login/**", "/favicon.ico").permitAll()// 루트 경로는 인증 절차 생략
+                        .requestMatchers("/","/main", "/login", "/logout", "/oauth2/**", "/login/**", "/favicon.ico").permitAll()// 루트 경로는 인증 절차 생략
                         .requestMatchers("/auth/refresh").permitAll()
                         .requestMatchers("/cctv/**").authenticated()
                         .anyRequest().authenticated() // 다른 모든 요청에 인증 필요a
