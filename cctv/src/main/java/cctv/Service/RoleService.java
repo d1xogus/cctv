@@ -63,13 +63,21 @@ public class RoleService {
 
         // 기존 스트림 목록 가져오기
         List<String> currentStreams = new ArrayList<>(role.getTotalStream());
+        List<String> selectStreams = new ArrayList<>(role.getSelectStream());
 
         // 새로운 스트림 추가 (중복 방지)
+        Set<String> updatedStreams = new HashSet<>(currentStreams);
+        Set<String> selectedStreams = new HashSet<>(selectStreams);
+
         if (roleDTO.getTotalStream() != null) {
-            Set<String> updatedStreams = new HashSet<>(currentStreams);
             updatedStreams.addAll(roleDTO.getTotalStream());
-            role.setTotalStream(new ArrayList<>(updatedStreams));
         }
+        if (roleDTO.getSelectStream() != null) {
+            selectedStreams.addAll(roleDTO.getSelectStream());
+        }
+
+        role.setTotalStream(new ArrayList<>(updatedStreams));
+        role.setSelectStream(new ArrayList<>(selectedStreams));
 
         // 변경된 Role 저장
         Role updatedRole = roleRepository.save(role);
