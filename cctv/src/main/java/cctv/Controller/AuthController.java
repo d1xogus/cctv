@@ -28,7 +28,7 @@ public class AuthController {
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String kakaoClientId;
 
-    @GetMapping("/logout")
+    @GetMapping("cleanguard/logout")
     public ResponseEntity<?> kakaoLogout(HttpServletRequest request, HttpServletResponse response) {
         log.info(" [카카오 로그아웃] 요청 시작");
 
