@@ -40,7 +40,7 @@ public class RoleController {
 
     @PostMapping("/{roleId}")
     public ResponseEntity<Role> stream(@PathVariable Long roleId, @RequestBody RoleDTO roleDTO){
-        return roleService.update(roleId, roleDTO);
+        return roleService.stream(roleId, roleDTO);
     }
 
     @DeleteMapping
